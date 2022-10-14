@@ -1,1 +1,2 @@
-mysql_server_name = "mysql_kwischme2022"
+mysql_server_name = "mysqlkwischme2022"
+username = "mysqladmin"

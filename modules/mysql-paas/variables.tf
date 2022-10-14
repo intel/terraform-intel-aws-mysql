@@ -12,10 +12,6 @@ variable "engine" {
   type = string
   default = "mysql"
 }
-variable "engine_version" {
-  type = string
-  default = "5.8"
-}
 # we recommend memory optimized instances - db.m61.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
 # see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 
@@ -27,7 +23,7 @@ variable "instance_class" {
 variable "availability_zone" {
   description = "The Availability Zone of the RDS instance"
   type        = string
-  default     = "us-west-1"
+  default     = null
 }
 variable "iops" {
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of 'io1'"
@@ -47,7 +43,16 @@ variable "password" {
   The password provided will not be used if the variable create_random_password is set to true.
   EOF
   type        = string
-  default     = null
   sensitive   = true
 }
 
+variable "final_snapshot_identifier_prefix" {
+  description = "The name which is prefixed to the final snapshot on cluster destroy"
+  type        = string
+  default     = "final"
+}
+variable "max_connections" {
+  description = "Max connections"
+  type = number
+  default = 4000
+}
