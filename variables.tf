@@ -1,3 +1,12 @@
+# we recommend memory optimized instances - db.m61.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
+# see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
+#add what is 6i
+
+variable "instance_class" {
+  type        = string
+  description = "The instance type of the RDS instance."
+  default     = "db.m6i.8xlarge"
+}
 #MySQL Server Name 
 variable "mysql_server_name" {
   description = "MySQL server name"
@@ -11,14 +20,6 @@ variable "allocated_storage" {
 variable "engine" {
   type    = string
   default = "mysql"
-}
-# we recommend memory optimized instances - db.m61.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
-# see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
-
-variable "instance_class" {
-  type        = string
-  description = "The instance type of the RDS instance."
-  default     = "db.m6i.8xlarge"
 }
 variable "availability_zone" {
   description = "The Availability Zone of the RDS instance"
