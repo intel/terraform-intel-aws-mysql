@@ -3,7 +3,7 @@ Intel AWS MySQL Optimized Cloud Recipe
 
 # Amazon RDS PostgreSQL (PaaS) - Intel Cloud Optimized Recipe
 
-Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.large by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this recipe is to get you started with a database configured to run best on Intel architecture.
+Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this recipe is to get you started with a database configured to run best on Intel architecture.
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
@@ -41,7 +41,6 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
 
 ## Resources
 
@@ -55,10 +54,12 @@ Note that this example may create resources which cost money. Run `terraform des
 ## Inputs
 
 - Database password 
+- Server name
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="id"></a> [id](#output\_rds\_hostname) | RDS instance hostname |
+| <a name="id"></a> [id](#output\_rds\_hostname) | RDS instance id |
+| <a name ="address"></a> [address] (output\_rds\_address) RDS instance hostname | 
 | <a name="username"></a> [rds_username](#output\_rds\_username) | RDS instance root username |
