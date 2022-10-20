@@ -35,7 +35,7 @@ variable "iops" {
 variable "username" {
   description = "Username for the master DB user"
   type        = string
-  default     = null
+  default     = mysqladmin
 }
 
 variable "password" {
