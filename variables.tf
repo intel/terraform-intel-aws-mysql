@@ -2,6 +2,7 @@
 # see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 #add what is 6i
 
+
 variable "instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
@@ -35,7 +36,7 @@ variable "iops" {
 variable "username" {
   description = "Username for the master DB user"
   type        = string
-  default     = mysqladmin
+  default     = "mysqladmin"
 }
 
 variable "password" {
