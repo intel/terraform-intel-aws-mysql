@@ -324,6 +324,6 @@ variable "parameters" {
   ]
 }
 variable "test" {
-  description = "This is a test variable"
-  
+  description = "This is a test variable, test2"
+
 }
