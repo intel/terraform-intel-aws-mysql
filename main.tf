@@ -54,11 +54,13 @@ resource "aws_db_instance" "mysql_server" {
   instance_class         = var.aws_database_instance_class
   allocated_storage      = var.aws_database_allocated_storage
   engine                 = "mysql"
-  username               = var.username
-  password               = var.password
-  parameter_group_name   = aws_db_parameter_group.tf-mysql-parameter-group.name
-  skip_final_snapshot    = var.final_snapshot_identifier_prefix
-  db_subnet_group_name   = aws_db_subnet_group.name
+  engine_version         = var.aws_database_engine_version
+  username               = var.aws_db_username
+  password               = var.db_password
+  parameter_group_name   = aws_db_parameter_group.mysql.name
+  publicly_accessible    = var.aws_publicly_accessible
+  skip_final_snapshot    = var.aws_database_skip_final_snapshot
+  db_subnet_group_name   = aws_db_subnet_group.mysql.name
   vpc_security_group_ids = [aws_security_group.rds.id]
 }
 
