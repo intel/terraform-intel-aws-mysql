@@ -1,13 +1,24 @@
+# we recommend memory optimized instances - db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
+# see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
+# The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
+
+variable "aws_database_instance_class" {
+  type        = string
+  description = "The instance type of the RDS instance."
+  default     = "db.m6i.2xlarge"
+}
+
 variable "region" {
   description = "AWS Region"
   type        = string
   default = "us-west-1"
 }
 
+
 variable "vpc_id" {
   description = "id of the vpc"
   type        = string
-  default = "vpc-043b378a6196bbd10"
+  default = "vpc-xxx"
 }
 
 variable "db_subnet_group_name" {
@@ -33,13 +44,13 @@ variable "aws_security_group_name" {
 variable "ingress_from_port" {
   description = "ingress from port for rds security group"
   type        = number
-  default     = 5432
+  default     = 3306
 }
 
 variable "ingress_to_port" {
   description = "ingress from port for rds security group"
   type        = number
-  default     = 5432
+  default     = 3306
 }
 
 variable "ingress_protocol" {
@@ -53,18 +64,18 @@ variable "ingress_cidr_blocks" {
   type        = list(string)
 
   ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
-  default = ["192.55.54.51/32"]
+  default = ["0.0.0.0/0"]
 }
 variable "egress_from_port" {
   description = "egress from port for rds security group"
   type        = number
-  default     = 5432
+  default     = 3306
 }
 
 variable "egress_to_port" {
   description = "egress from port for rds security group"
   type        = number
-  default     = 5432
+  default     = 3306
 }
 
 variable "egress_protocol" {
@@ -95,7 +106,7 @@ variable "db_parameter_group_name" {
 variable "db_parameter_group_family" {
   description = "family for db parameter group"
   type        = string
-  default     = "mysql13"
+  default     = "mysql8.0"
 }
 
 variable "aws_database_instance_identifier" {
@@ -103,20 +114,10 @@ variable "aws_database_instance_identifier" {
   default = "mysql"
 }
 
-# we recommend memory optimized instances - db.m61.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
-# see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
-# are the 6th generation of Amazon EC2 x86-based General Purpose compute instances, designed to provide a balance of compute, memory, storage, and network resources.
-
-variable "aws_database_instance_class" {
-  type        = string
-  description = "The instance type of the RDS instance."
-  default     = "db.m6i.8xlarge"
-}
-
 variable "aws_database_allocated_storage" {
   type        = string
   description = "The allocated storage in gibibytes."
-  default     = 400
+  default     = 20
 }
 
 variable "aws_database_engine_version" {
@@ -139,8 +140,8 @@ variable "aws_database_publicly_accessible" {
 
 variable "aws_database_skip_final_snapshot" {
   description = "The name which is prefixed to the final snapshot on cluster destroy"
-  type        = string
-  default     = "final"
+  type        = bool
+  default     = false
 }
 
 variable "db_password" {
@@ -160,17 +161,6 @@ variable "availability_zone" {
   default     = null
 }
 
-variable "iops" {
-  description = "The amount of provisioned IOPS. Setting this implies a storage_type of 'io1'"
-  type        = number
-  default     = 3000
-}
-
-variable "max_connections" {
-  description = "Max connections"
-  type        = number
-  default     = 4000
-}
 variable "family" {
   type    = string
   default = "mysql8.0"

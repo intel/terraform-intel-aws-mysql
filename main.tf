@@ -49,6 +49,9 @@ resource "aws_db_parameter_group" "mysql" {
     }
   }
 }
+
+
+
 resource "aws_db_instance" "mysql_server" {
   identifier             = var.aws_database_instance_identifier
   instance_class         = var.aws_database_instance_class
@@ -58,7 +61,7 @@ resource "aws_db_instance" "mysql_server" {
   username               = var.aws_db_username
   password               = var.db_password
   parameter_group_name   = aws_db_parameter_group.mysql.name
-  publicly_accessible    = var.aws_publicly_accessible
+  publicly_accessible    = var.aws_database_publicly_accessible
   skip_final_snapshot    = var.aws_database_skip_final_snapshot
   db_subnet_group_name   = aws_db_subnet_group.mysql.name
   vpc_security_group_ids = [aws_security_group.rds.id]
