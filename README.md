@@ -8,16 +8,45 @@ Configuration in this directory creates an Amazon RDS instance for MySQL. The in
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
 ## Usage
+See examples folder for code ./examples/main.tf
 
-To run this example you need to execute:
+By default, you will only have to pass three variables
 
-```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+```hcl
+resource_group_name 
+mysql_server_name  
+mysql_administrator_login_password 
+
 ```
 
-Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
+Example of main.tf
+
+```hcl
+# main.tf
+
+# This variable is created so that you can provide the password value on the command line 
+variable "mysql_administrator_login_password" {
+  description = "The admin password"
+}
+
+# Provision Intel Optimized AWS MySQL server 
+module "optimized-mysql-server" {
+  source                             = "github.com/intel/terraform-intel-aws-mysql"
+  resource_group_name                = "<ENTER_RG_NAME_HERE>"
+  mysql_server_name                  = "<ENTER_MYSQL_SERVER_NAME_HERE>"
+  mysql_administrator_login_password = var.mysql_administrator_login_password
+}
+
+```
+
+Run terraform
+
+```bash
+terraform init  
+terraform plan -var="mysql_administrator_login_password=<ENTER_PASSWORD_HERE>" #Enter a complex password
+terraform apply -var="mysql_administrator_login_password=<ENTER_PASSWORD_HERE>" #Enter a complex password
+
+```
 
 ## Considerations
 - Check in the variables.tf file for the region where this database instance will be created. It is defaulted to run in us-west-1 region within AWS. If you want to run it within any other region, make changes accordingly within the Terraform code
