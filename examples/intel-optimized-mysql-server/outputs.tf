@@ -1,24 +1,24 @@
 output "id" {
-  value       = aws_db_instance.mysql_server.id
+  value       = module.optimized-mysql-server.id
   description = "Instance ID for the MySQL instance that has been created"
 }
 
 output "address" {
-  value       = aws_db_instance.mysql_server.address
+  value       = module.optimized-mysql-server.address
   description = "Hostname of the MySQL instance that has been created"
 }
 
 output "port" {
-  value       = aws_db_instance.mysql_server.port
+  value       = module.optimized-mysql-server.port
   description = "Port that the MySQL instance is listening on"
 }
 
 output "username" {
-  value       = aws_db_instance.mysql_server.username
+  value       = module.optimized-mysql-server.username
   description = "Master username for the MySQL instance that has been created"
 }
 
 output "endpoint" {
-  value       = aws_db_instance.mysql_server.endpoint
+  value       = module.optimized-mysql-server.endpoint
   description = "Connection endpoing for the MySQL instance that has been created"
 }
