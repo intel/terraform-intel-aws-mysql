@@ -2,9 +2,37 @@
 # see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 # The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
 
+
+# Moved required variables to the top
+variable "vpc_id" {
+  description = "id of the vpc"
+  type        = string
+}
+
+variable "db_password" {
+  description = "RDS root user password"
+  sensitive   = true
+}
+
+variable "mysql_server_name" {
+  description = "MySQL server name"
+  type        = string
+}
+
+# # Not referenced
+# variable "availability_zone" {
+#   description = "The Availability Zone of the RDS instance"
+#   type        = string
+#   default     = null
+# }
+
 variable "aws_database_instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
+  validation {
+    condition     = contains(["db.m6i.large","db.m6i.xlarge", "db.m6i.2xlarge", "db.m6i.4xlarge", "db.m6i.8xlarge", "db.m6i.12xlarge","db.m6i.16xlarge","db.m6i.24xlarge","db.m6i.32xlarge"], var.aws_database_instance_class)
+    error_message = "The aws_database_instance_class must be one of the following: \"db.m6i.large\",\"db.m6i.xlarge\", \"db.m6i.2xlarge\", \"db.m6i.4xlarge\", \"db.m6i.8xlarge\", \"db.m6i.12xlarge\",\"db.m6i.16xlarge\",\"db.m6i.24xlarge\", \"db.m6i.32xlarge\" \"."
+  }
   default     = "db.m6i.2xlarge"
 }
 
@@ -12,13 +40,6 @@ variable "region" {
   description = "AWS Region"
   type        = string
   default = "us-west-1"
-}
-
-
-variable "vpc_id" {
-  description = "id of the vpc"
-  type        = string
-  default = "vpc-xxx"
 }
 
 variable "db_subnet_group_name" {
@@ -144,22 +165,7 @@ variable "aws_database_skip_final_snapshot" {
   default     = false
 }
 
-variable "db_password" {
-  description = "RDS root user password"
-  sensitive   = true
-}
 
-variable "mysql_server_name" {
-  description = "MySQL server name"
-  type        = string
-}
-
-
-variable "availability_zone" {
-  description = "The Availability Zone of the RDS instance"
-  type        = string
-  default     = null
-}
 
 variable "family" {
   type    = string
