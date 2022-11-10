@@ -14,10 +14,11 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "mysql_server_name" {
-  description = "MySQL server name"
-  type        = string
-}
+# # Not referenced
+# variable "mysql_server_name" {
+#   description = "MySQL server name"
+#   type        = string
+# }
 
 # # Not referenced
 # variable "availability_zone" {
@@ -30,17 +31,13 @@ variable "aws_database_instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
   validation {
-    condition     = contains(["db.m6i.large","db.m6i.xlarge", "db.m6i.2xlarge", "db.m6i.4xlarge", "db.m6i.8xlarge", "db.m6i.12xlarge","db.m6i.16xlarge","db.m6i.24xlarge","db.m6i.32xlarge"], var.aws_database_instance_class)
+    condition     = contains(["db.m6i.large", "db.m6i.xlarge", "db.m6i.2xlarge", "db.m6i.4xlarge", "db.m6i.8xlarge", "db.m6i.12xlarge", "db.m6i.16xlarge", "db.m6i.24xlarge", "db.m6i.32xlarge"], var.aws_database_instance_class)
     error_message = "The aws_database_instance_class must be one of the following: \"db.m6i.large\",\"db.m6i.xlarge\", \"db.m6i.2xlarge\", \"db.m6i.4xlarge\", \"db.m6i.8xlarge\", \"db.m6i.12xlarge\",\"db.m6i.16xlarge\",\"db.m6i.24xlarge\", \"db.m6i.32xlarge\" \"."
   }
-  default     = "db.m6i.2xlarge"
+  default = "db.m6i.2xlarge"
 }
 
-variable "region" {
-  description = "AWS Region"
-  type        = string
-  default = "us-west-1"
-}
+
 
 variable "db_subnet_group_name" {
   description = "db subnet group name"
@@ -165,12 +162,11 @@ variable "aws_database_skip_final_snapshot" {
   default     = false
 }
 
-
-
 variable "family" {
   type    = string
   default = "mysql8.0"
 }
+
 variable "parameters" {
   description = "A list of DB parameter maps to apply"
   type        = list(map(string))
