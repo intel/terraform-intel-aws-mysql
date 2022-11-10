@@ -22,14 +22,6 @@ variable "aws_database_instance_class" {
   default = "db.m6i.2xlarge"
 }
 
-variable "region" {
-  description = "AWS region"
-  type        = string
-
-  ## Set the value of the aws region where the database will be created
-  default = "us-east-1"
-}
-
 variable "db_subnet_group_name" {
   description = "db subnet group name"
   type        = string
