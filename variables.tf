@@ -2,27 +2,24 @@
 # see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 # The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
 
+variable "vpc_id" {
+  description = "id of the vpc"
+  type        = string
+}
+
+variable "db_password" {
+  description = "RDS root user password"
+  sensitive   = true
+}
+
 variable "aws_database_instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
   default     = "db.m6i.2xlarge"
 }
 
-variable "region" {
-  description = "AWS Region"
-  type        = string
-  default = "us-west-1"
-}
-
-
-variable "vpc_id" {
-  description = "id of the vpc"
-  type        = string
-  default = "vpc-xxx"
-}
-
 variable "db_subnet_group_name" {
-  description = "db subnet group name"
+  description = "Name for the database subnet group that will be created."
   type        = string
   default     = "mysql"
 }
@@ -66,6 +63,7 @@ variable "ingress_cidr_blocks" {
   ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
   default = ["0.0.0.0/0"]
 }
+
 variable "egress_from_port" {
   description = "egress from port for rds security group"
   type        = number
@@ -97,6 +95,7 @@ variable "rds_security_group_tag" {
     "Name" = "mysql_rds"
   }
 }
+
 variable "db_parameter_group_name" {
   description = "name for db parameter group"
   type        = string
@@ -139,32 +138,17 @@ variable "aws_database_publicly_accessible" {
 }
 
 variable "aws_database_skip_final_snapshot" {
-  description = "The name which is prefixed to the final snapshot on cluster destroy"
+  description = "Flag which determines if a final DB snapshot is taken prior to instance deletion."
   type        = bool
   default     = false
 }
 
-variable "db_password" {
-  description = "RDS root user password"
-  sensitive   = true
-}
-
-variable "mysql_server_name" {
-  description = "MySQL server name"
+variable "aws_database_final_snapshot_prefix" {
+  description = "The name which is prefixed to the final snapshot on cluster destroy"
   type        = string
+  default     = "mysql-snap-"
 }
 
-
-variable "availability_zone" {
-  description = "The Availability Zone of the RDS instance"
-  type        = string
-  default     = null
-}
-
-variable "family" {
-  type    = string
-  default = "mysql8.0"
-}
 variable "parameters" {
   description = "A list of DB parameter maps to apply"
   type        = list(map(string))
@@ -333,6 +317,5 @@ variable "parameters" {
       name  = "innodb_adaptive_hash_index"
       value = 0
     }
-
   ]
 }

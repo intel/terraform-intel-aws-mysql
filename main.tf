@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 data "aws_subnets" "vpc_subnets" {
   filter {
     name   = "vpc-id"
@@ -50,20 +46,19 @@ resource "aws_db_parameter_group" "mysql" {
   }
 }
 
-
-
 resource "aws_db_instance" "mysql_server" {
-  identifier             = var.aws_database_instance_identifier
-  instance_class         = var.aws_database_instance_class
-  allocated_storage      = var.aws_database_allocated_storage
-  engine                 = "mysql"
-  engine_version         = var.aws_database_engine_version
-  username               = var.aws_db_username
-  password               = var.db_password
-  parameter_group_name   = aws_db_parameter_group.mysql.name
-  publicly_accessible    = var.aws_database_publicly_accessible
-  skip_final_snapshot    = var.aws_database_skip_final_snapshot
-  db_subnet_group_name   = aws_db_subnet_group.mysql.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  identifier                = var.aws_database_instance_identifier
+  instance_class            = var.aws_database_instance_class
+  allocated_storage         = var.aws_database_allocated_storage
+  engine                    = "mysql"
+  engine_version            = var.aws_database_engine_version
+  username                  = var.aws_db_username
+  password                  = var.db_password
+  parameter_group_name      = aws_db_parameter_group.mysql.name
+  publicly_accessible       = var.aws_database_publicly_accessible
+  skip_final_snapshot       = var.aws_database_skip_final_snapshot
+  final_snapshot_identifier = var.aws_database_skip_final_snapshot ? "" : "${var.aws_database_final_snapshot_prefix}${var.aws_database_instance_identifier}"
+  db_subnet_group_name      = aws_db_subnet_group.mysql.name
+  vpc_security_group_ids    = [aws_security_group.rds.id]
 }
 
