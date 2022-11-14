@@ -1,22 +1,24 @@
+<p align="center">
+  <img src="./images/logo-classicblue-800px.png" alt="Intel Logo" width="250"/>
+</p>
+
 # terraform-intel-aws-mysql
-Intel AWS MySQL Optimized Cloud Recipe
+Intel AWS MySQL Optimized Cloud Module
 
-# Amazon RDS MySQL (PaaS) - Intel Cloud Optimized Recipe
+# Amazon RDS MySQL (PaaS) - Intel Cloud Optimized Module
 
-Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this recipe is to get you started with a database configured to run best on Intel architecture.
+Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
 ## Usage
 See examples folder for code ./examples/main.tf
 
-By default, you will only have to pass three variables
+By default, you will only have to pass two variables
 
 ```hcl
-resource_group_name 
-mysql_server_name  
-mysql_administrator_login_password 
-
+db_password
+vpc_id
 ```
 
 Example of main.tf
@@ -29,12 +31,18 @@ variable "mysql_administrator_login_password" {
   description = "The admin password"
 }
 
-# Provision Intel Optimized AWS MySQL server 
-module "optimized-mysql-server" {
-  source                             = "github.com/intel/terraform-intel-aws-mysql"
-  resource_group_name                = "<ENTER_RG_NAME_HERE>"
-  mysql_server_name                  = "<ENTER_MYSQL_SERVER_NAME_HERE>"
-  mysql_administrator_login_password = var.mysql_administrator_login_password
+# Example of how to pass variable for database password:
+# terraform apply -var="db_password=..."
+# Environment variables can also be used https://www.terraform.io/language/values/variables#environment-variables
+
+# Provision Intel Optimized AWS MySQL server
+  module "optimized-mysql-server" {
+  source      = "github.com/intel/terraform-intel-aws-mysql"
+  db_password = var.db_password
+  # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
+  # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
+  # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
+  vpc_id      = "ENTER_VPC_ID_HERE"
 }
 
 ```
