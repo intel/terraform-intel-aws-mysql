@@ -6,7 +6,6 @@ output "id" {
 output "address" {
   value       = module.optimized-mysql-server.mysql_address
   description = "Hostname of the MySQL instance that has been created"
-  sensitive   = true
 }
 
 output "port" {
@@ -17,11 +16,9 @@ output "port" {
 output "username" {
   value       = module.optimized-mysql-server.mysql_username
   description = "Master username for the MySQL instance that has been created"
-  sensitive   = true
 }
 
 output "endpoint" {
   value       = module.optimized-mysql-server.mysql_endpoint
   description = "Connection endpoing for the MySQL instance that has been created"
-  sensitive   = true
 }

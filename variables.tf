@@ -15,11 +15,7 @@ variable "db_password" {
 variable "aws_database_instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
-  validation {
-    condition     = contains(["db.m6i.large", "db.m6i.xlarge", "db.m6i.2xlarge", "db.m6i.4xlarge", "db.m6i.8xlarge", "db.m6i.12xlarge", "db.m6i.16xlarge", "db.m6i.24xlarge", "db.m6i.32xlarge"], var.aws_database_instance_class)
-    error_message = "The aws_database_instance_class must be one of the following: \"db.m6i.large\",\"db.m6i.xlarge\", \"db.m6i.2xlarge\", \"db.m6i.4xlarge\", \"db.m6i.8xlarge\", \"db.m6i.12xlarge\",\"db.m6i.16xlarge\",\"db.m6i.24xlarge\", \"db.m6i.32xlarge\" \"."
-  }
-  default = "db.m6i.2xlarge"
+  default     = "db.m6i.2xlarge"
 }
 
 variable "db_subnet_group_name" {
@@ -67,6 +63,7 @@ variable "ingress_cidr_blocks" {
   ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
   default = ["0.0.0.0/0"]
 }
+
 variable "egress_from_port" {
   description = "egress from port for rds security group"
   type        = number

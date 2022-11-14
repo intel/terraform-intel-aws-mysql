@@ -6,7 +6,6 @@ output "mysql_id" {
 output "mysql_address" {
   value       = aws_db_instance.mysql_server.address
   description = "Hostname of the MySQL instance that has been created"
-  sensitive   = true
 }
 
 output "mysql_port" {
@@ -17,11 +16,9 @@ output "mysql_port" {
 output "mysql_username" {
   value       = aws_db_instance.mysql_server.username
   description = "Master username for the MySQL instance that has been created"
-  sensitive   = true
 }
 
 output "mysql_endpoint" {
   value       = aws_db_instance.mysql_server.endpoint
   description = "Connection endpoint for the MySQL instance that has been created"
-  sensitive   = true
 }
