@@ -3,10 +3,154 @@
 # The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
 
 
+########################
+####     Intel      ####
+########################
+
+variable "db_parameters" {
+  type = object({
+    postgres = optional(object({
+      temp_buffers = optional(object({
+        value        = optional(string, 4096 * 1024 / 8)
+        apply_method = optional(string, "immediate")
+      }))
+      work_mem = optional(object({
+        value        = optional(string, 4096 * 1024)
+        apply_method = optional(string, "immediate")
+      }))
+      maintenance_work_mem = optional(object({
+        value        = optional(string, 512 * 1024)
+        apply_method = optional(string, "immediate")
+      }))
+      autovacuum_work_mem = optional(object({
+        value        = optional(string, "-1")
+        apply_method = optional(string, "immediate")
+      }))
+      max_stack_depth = optional(object({
+        value        = optional(string, 7 * 1024)
+        apply_method = optional(string, "immediate")
+      }))
+      effective_io_concurrency = optional(object({
+        value        = optional(string, "32")
+        apply_method = optional(string, "immediate")
+      }))
+      synchronous_commit = optional(object({
+        value        = optional(string, "off")
+        apply_method = optional(string, "immediate")
+      }))
+      min_wal_size = optional(object({
+        value        = optional(string, "256")
+        apply_method = optional(string, "immediate")
+      }))
+      max_wal_size = optional(object({
+        value        = optional(string, "512")
+        apply_method = optional(string, "immediate")
+      }))
+      checkpoint_warning = optional(object({
+        value        = optional(string, 1 * 60 * 60)
+        apply_method = optional(string, "immediate")
+      }))
+      random_page_cost = optional(object({
+        value        = optional(string, "1.1")
+        apply_method = optional(string, "immediate")
+      }))
+      cpu_tuple_cost = optional(object({
+        value        = optional(string, "0.03")
+        apply_method = optional(string, "immediate")
+      }))
+      effective_cache_size = optional(object({
+        value        = optional(string, 350 * 1024 * 1024 / 8)
+        apply_method = optional(string, "immediate")
+      }))
+      autovacuum = optional(object({
+        value        = optional(string, "1")
+        apply_method = optional(string, "immediate")
+      }))
+      autovacuum_vacuum_cost_limit = optional(object({
+        value        = optional(string, "3000")
+        apply_method = optional(string, "immediate")
+      }))
+      vacuum_freeze_min_age = optional(object({
+        value        = optional(string, "10000000")
+        apply_method = optional(string, "immediate")
+      }))
+      max_connections = optional(object({
+        value        = optional(string, "256")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      huge_pages = optional(object({
+        value        = optional(string, "on")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      shared_buffers = optional(object({
+        value        = optional(string, "{DBInstanceClassMemory*3/32768}")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_files_per_process = optional(object({
+        value        = optional(string, "4000")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_worker_processes = optional(object({
+        value        = optional(string, "{DBInstanceVCPU}")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      wal_buffers = optional(object({
+        value        = optional(string, "-1")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_wal_senders = optional(object({
+        value        = optional(string, "5")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      timezone = optional(object({
+        value        = optional(string, "UTC")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_locks_per_transaction = optional(object({
+        value        = optional(string, "64")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_pred_locks_per_transaction = optional(object({
+        value        = optional(string, "64")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      checkpoint_completion_target = optional(object({
+        value        = optional(string, "0.9")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      autovacuum_max_workers = optional(object({
+        value        = optional(string, "10")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      autovacuum_freeze_max_age = optional(object({
+        value        = optional(string, "750000000")
+        apply_method = optional(string, "pending-reboot")
+      }))
+    }))
+  })
+  default = {
+    postgres = {}
+  }
+}
+
+variable "instance_class" {
+  type        = string
+  description = "Instance class that will be used by the RDS instance."
+  default     = "db.m6i.large"
+}
+
+
+########################
+####    Required    ####
+########################
 variable "vpc_id" {
   description = "VPC ID within which the database resource will be created."
   type        = string
 }
+
+########################
+####     Other      ####
+########################
 
 variable "db_subnet_group_name" {
   description = "Database subnet group name."
@@ -21,7 +165,6 @@ variable "db_subnet_group_tag" {
     "Name" = "mysql"
   }
 }
-
 
 variable "db_parameter_group_name" {
   description = "Name for the RDS database parameter group."
@@ -39,14 +182,6 @@ variable "aws_database_instance_identifier" {
   description = "Identifier for the AWS database instance."
   type        = string
   default     = "mysql"
-}
-
-## General
-
-variable "instance_class" {
-  type        = string
-  description = "Instance class that will be used by the RDS instance."
-  default     = "db.m6i.large"
 }
 
 variable "db_name" {
@@ -85,7 +220,11 @@ variable "db_engine_version" {
 variable "db_engine" {
   description = "Database engine version for AWS database instance."
   type        = string
-  default     = "mysql"
+  validation {
+    condition     = contains(["mysql"], var.db_engine)
+    error_message = "The db_engine must be \"mysql\"."
+  }
+  default = "mysql"
 }
 
 variable "db_option_group" {
@@ -137,14 +276,11 @@ variable "final_snapshot_prefix" {
   default     = "mysql-snap-"
 }
 
-## DB Names
-
 variable "rds_identifier" {
   description = "Name of the RDS instance that will be created."
   type        = string
 }
 
-## Storage
 variable "db_storage_type" {
   description = "The storage type that will be set on the instance. If db_iops is set then this will be set to io1"
   type        = string
@@ -173,7 +309,6 @@ variable "db_iops" {
   default     = 0
 }
 
-## Upgrades
 variable "db_apply_immediately" {
   description = "Flag that specifies whether any database modifications are applied immediately, or during the next maintenance window."
   type        = bool
@@ -198,8 +333,6 @@ variable "db_maintenance_window" {
   default     = null
 }
 
-
-## Security
 variable "db_publicly_accessible" {
   description = "Flag to indicate whether the database will be publicly accessible."
   type        = bool
@@ -259,173 +392,6 @@ variable "db_performance_retention_period" {
   default     = null
 }
 
-
-## Parameters
-
-variable "db_parameters" {
-  type = object({
-    mysql = optional(object({
-      table_open_cache = optional(object({
-        value        = optional(string, "8000")
-        apply_method = optional(string, "immediate")
-      }))
-      table_open_cache_instances = optional(object({
-        value        = optional(string, "16")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      max_connections = optional(object({
-        value        = optional(string, "4000")
-        apply_method = optional(string, "immediate")
-      }))
-      back_log = optional(object({
-        value        = optional(string, "1500")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      default_password_lifetime = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      performance_schema = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      max_prepared_stmt_count = optional(object({
-        value        = optional(string, "128000")
-        apply_method = optional(string, "immediate")
-      }))
-      character_set_server = optional(object({
-        value        = optional(string, "latin1")
-        apply_method = optional(string, "immediate")
-      }))
-      collation_server = optional(object({
-        value        = optional(string, "latin1_swedish_ci")
-        apply_method = optional(string, "immediate")
-      }))
-      transaction_isolation = optional(object({
-        value        = optional(string, "REPEATABLE-READ")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_log_file_size = optional(object({
-        value        = optional(string, 1024 * 1024 * 1024)
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_open_files = optional(object({
-        value        = optional(string, "4000")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_buffer_pool_instances = optional(object({
-        value        = optional(string, "16")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_log_buffer_size = optional(object({
-        value        = optional(string, "67108864")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_thread_concurrency = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_flush_log_at_trx_commit = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_max_dirty_pages_pct = optional(object({
-        value        = optional(string, "90")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_max_dirty_pages_pct_lwm = optional(object({
-        value        = optional(string, "10")
-        apply_method = optional(string, "immediate")
-      }))
-      join_buffer_size = optional(object({
-        value        = optional(string, 32 * 1024)
-        apply_method = optional(string, "immediate")
-      }))
-      sort_buffer_size = optional(object({
-        value        = optional(string, 32 * 1024)
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_use_native_aio = optional(object({
-        value        = optional(string, "1")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_stats_persistent = optional(object({
-        value        = optional(string, "ON")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_spin_wait_delay = optional(object({
-        value        = optional(string, "6")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_max_purge_lag_delay = optional(object({
-        value        = optional(string, "300000")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_max_purge_lag = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_checksum_algorithm = optional(object({
-        value        = optional(string, "none")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_io_capacity = optional(object({
-        value        = optional(string, "4000")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_io_capacity_max = optional(object({
-        value        = optional(string, "20000")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_lru_scan_depth = optional(object({
-        value        = optional(string, "9000")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_change_buffering = optional(object({
-        value        = optional(string, "none")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_page_cleaners = optional(object({
-        value        = optional(string, "4")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_undo_log_truncate = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_adaptive_flushing = optional(object({
-        value        = optional(string, "1")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_flush_neighbors = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "immediate")
-      }))
-      innodb_read_io_threads = optional(object({
-        value        = optional(string, "16")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_write_io_threads = optional(object({
-        value        = optional(string, "16")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_purge_threads = optional(object({
-        value        = optional(string, "4")
-        apply_method = optional(string, "pending-reboot")
-      }))
-      innodb_adaptive_hash_index = optional(object({
-        value        = optional(string, "0")
-        apply_method = optional(string, "immediate")
-      }))
-    }))
-  })
-  default = {
-    mysql = {}
-  }
-}
-
-
-## AD / IAM
 variable "db_domain" {
   description = "The ID of the Directory Service Active Directory domain to create the instance in."
   type        = string
@@ -456,15 +422,11 @@ variable "db_iam_authentication" {
   default     = false
 }
 
-
-# Replication
 variable "db_replicate_source_db" {
   description = "Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate (if replicating within a single region) or ARN of the Amazon RDS Database to replicate (if replicating cross-region). Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id."
   type        = string
   default     = null
 }
-
-## Timeouts
 
 variable "db_timeouts" {
   type = object({
@@ -478,7 +440,6 @@ variable "db_timeouts" {
   }
 }
 
-# Restore
 variable "db_restore_time" {
   description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
   type        = string
@@ -509,7 +470,6 @@ variable "db_use_latest_restore_time" {
   default     = null
 }
 
-# Backups
 variable "db_backup_retention_period" {
   description = "The days to retain backups for. Must be between 0 and 35. Must be greater than 0 if the database is used as a source for a Read Replica."
   type        = number
@@ -531,9 +491,6 @@ variable "db_deletion_protection" {
   type        = bool
   default     = false
 }
-
-
-# Conditional Security Group
 
 variable "security_group_name" {
   description = "Security group name for the RDS instance that will be created."
