@@ -58,8 +58,16 @@ variable "db_parameters" {
         value        = optional(string, "4000")
         apply_method = optional(string, "pending-reboot")
       }))
+      innodb_file_per_table = optional(object({
+        value        = optional(string, "1")
+        apply_method = optional(string, "pending-reboot")
+      }))
       innodb_buffer_pool_instances = optional(object({
         value        = optional(string, "16")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_buffer_pool_size = optional(object({
+        value        = optional(string, "64424509440") # 60 Gigabytes #Calculator https://convertlive.com/u/convert/gigabytes/to/bytes
         apply_method = optional(string, "pending-reboot")
       }))
       innodb_log_buffer_size = optional(object({
