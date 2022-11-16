@@ -2,34 +2,543 @@
 # see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 # The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
 
+
 variable "vpc_id" {
-  description = "id of the vpc"
+  description = "VPC ID within which the database resource will be created."
   type        = string
-}
-
-variable "db_password" {
-  description = "RDS root user password"
-  sensitive   = true
-}
-
-variable "aws_database_instance_class" {
-  type        = string
-  description = "The instance type of the RDS instance."
-  default     = "db.m6i.2xlarge"
 }
 
 variable "db_subnet_group_name" {
-  description = "Name for the database subnet group that will be created."
+  description = "Database subnet group name."
   type        = string
   default     = "mysql"
 }
 
 variable "db_subnet_group_tag" {
-  description = "tag for db subnet group"
+  description = "Tag for the database subnet group."
   type        = map(string)
   default = {
     "Name" = "mysql"
   }
+}
+
+
+variable "db_parameter_group_name" {
+  description = "Name for the RDS database parameter group."
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_parameter_group_family" {
+  description = "Family identifier for the RDS database parameter group."
+  type        = string
+  default     = "mysql8.0"
+}
+
+variable "aws_database_instance_identifier" {
+  description = "Identifier for the AWS database instance."
+  type        = string
+  default     = "mysql"
+}
+
+## General
+
+variable "instance_class" {
+  type        = string
+  description = "Instance class that will be used by the RDS instance."
+  default     = "db.m6i.large"
+}
+
+variable "db_name" {
+  description = "Name of the database that will be created on the RDS instance. If this is specified then a database will be created as a part of the instance provisioning process."
+  type        = string
+  default     = null
+}
+
+variable "db_username" {
+  description = "Username for the master database user."
+  sensitive   = false
+  default     = null
+}
+
+variable "db_password" {
+  description = "Password for the master database user."
+  sensitive   = true
+  validation {
+    condition     = length(var.db_password) >= 8
+    error_message = "The db_password value must be at least 8 characters in length."
+  }
+}
+
+variable "db_port" {
+  description = "The port on which the DB accepts connections."
+  type        = number
+  default     = null
+}
+
+variable "db_engine_version" {
+  description = "Database engine version for AWS database instance."
+  type        = string
+  default     = "8.0"
+}
+
+variable "db_engine" {
+  description = "Database engine version for AWS database instance."
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_option_group" {
+  type        = string
+  description = "Option group name to associate with the database instance."
+  default     = null
+}
+
+variable "availability_zone" {
+  description = "Availability zone where the RDS instance will be instantiated."
+  type        = string
+  default     = null
+}
+
+variable "multi_az" {
+  description = "Flag that specifies if the RDS instance is multi_az."
+  type        = bool
+  default     = false
+}
+
+variable "db_tags" {
+  description = "Map of tags to apply to the database instance."
+  type        = map(string)
+  default     = null
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "List of existing AWS security groups that will be attached to the RDS instance."
+  default     = []
+}
+
+variable "db_ca_cert_identifier" {
+  type        = string
+  description = "The identifier of the CA certificate for the DB instance."
+  default     = null
+}
+
+## Snapshots
+variable "skip_final_snapshot" {
+  description = "Flag to indicate whether a final snapshot will be skipped upon database termination."
+  type        = bool
+  default     = false
+}
+
+variable "final_snapshot_prefix" {
+  description = "The name which is prefixed to the final snapshot on database termination."
+  type        = string
+  default     = "mysql-snap-"
+}
+
+## DB Names
+
+variable "rds_identifier" {
+  description = "Name of the RDS instance that will be created."
+  type        = string
+}
+
+## Storage
+variable "db_storage_type" {
+  description = "The storage type that will be set on the instance. If db_iops is set then this will be set to io1"
+  type        = string
+  validation {
+    condition     = contains(["standard", "gp2", "io1"], var.db_storage_type)
+    error_message = "The db_storage_type must be one of the following: \"standard\", \"gp2\", \"io1\"."
+  }
+  default = "gp2"
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage for AWS database instance."
+  type        = number
+  default     = null
+}
+
+variable "db_max_allocated_storage" {
+  description = "When configured, the upper limit to which Amazon RDS can automatically scale the storage of the DB instance. Configuring this will automatically ignore differences to allocated_storage. Must be greater than or equal to allocated_storage or 0 to disable Storage Autoscaling."
+  type        = number
+  default     = null
+}
+
+variable "db_iops" {
+  description = "The amount of provisioned IOPS. Setting this implies a storage_type of io1."
+  type        = number
+  default     = 0
+}
+
+## Upgrades
+variable "db_apply_immediately" {
+  description = "Flag that specifies whether any database modifications are applied immediately, or during the next maintenance window."
+  type        = bool
+  default     = false
+}
+
+variable "auto_minor_version_upgrades" {
+  description = "Flag that specifies if minor engine upgrades will be applied automatically to the DB instance during the maintenance window."
+  type        = bool
+  default     = true
+}
+
+variable "auto_major_version_upgrades" {
+  description = "Flag that specifices if major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible."
+  type        = bool
+  default     = false
+}
+
+variable "db_maintenance_window" {
+  type        = string
+  description = "The window to perform maintenance in. Syntax: ddd:hh24:mi-ddd:hh24:mi"
+  default     = null
+}
+
+
+## Security
+variable "db_publicly_accessible" {
+  description = "Flag to indicate whether the database will be publicly accessible."
+  type        = bool
+  default     = false
+}
+
+variable "kms_key_id" {
+  type        = string
+  description = "The ARN for the KMS encryption key. If creating an encrypted replica, set this to the destination KMS ARN."
+  default     = null
+}
+
+variable "db_encryption" {
+  description = "Flag that specifies whether the DB instance is encrypted."
+  type        = bool
+  default     = true
+}
+
+# Monitoring
+variable "db_monitoring_interval" {
+  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance"
+  type        = string
+  validation {
+    condition     = contains(["0", "1", "5", "10", "15", "30", "60"], var.db_monitoring_interval)
+    error_message = "The db_monitoring_interval must be one of the following: 0, 1, 5, 10, 15, 30, 60."
+  }
+  default = 0
+}
+
+variable "db_monitoring_role_arn" {
+  description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs"
+  type        = string
+  default     = null
+}
+
+variable "db_cloudwatch_logs_export" {
+  description = "Set of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported."
+  type        = list(string)
+  default     = []
+}
+
+variable "db_performance_insights" {
+  description = "Flag that specifies whether Performance Insights are enabled."
+  type        = bool
+  default     = false
+}
+
+variable "db_performance_insights_kms_key_id" {
+  description = "The ARN for the KMS key to encrypt Performance Insights data."
+  type        = string
+  default     = null
+}
+
+variable "db_performance_retention_period" {
+  description = "Amount of time in days to retain Performance Insights data.Valid values are 7, 731 (2 years) or a multiple of 31."
+  type        = string
+  default     = null
+}
+
+
+## Parameters
+
+variable "db_parameters" {
+  type = object({
+    mysql = optional(object({
+      table_open_cache = optional(object({
+        value        = optional(string, "8000")
+        apply_method = optional(string, "immediate")
+      }))
+      table_open_cache_instances = optional(object({
+        value        = optional(string, "16")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_connections = optional(object({
+        value        = optional(string, "4000")
+        apply_method = optional(string, "immediate")
+      }))
+      back_log = optional(object({
+        value        = optional(string, "1500")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      default_password_lifetime = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      performance_schema = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      max_prepared_stmt_count = optional(object({
+        value        = optional(string, "128000")
+        apply_method = optional(string, "immediate")
+      }))
+      character_set_server = optional(object({
+        value        = optional(string, "latin1")
+        apply_method = optional(string, "immediate")
+      }))
+      collation_server = optional(object({
+        value        = optional(string, "latin1_swedish_ci")
+        apply_method = optional(string, "immediate")
+      }))
+      transaction_isolation = optional(object({
+        value        = optional(string, "REPEATABLE-READ")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_log_file_size = optional(object({
+        value        = optional(string, 1024 * 1024 * 1024)
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_open_files = optional(object({
+        value        = optional(string, "4000")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_buffer_pool_instances = optional(object({
+        value        = optional(string, "16")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_log_buffer_size = optional(object({
+        value        = optional(string, "67108864")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_thread_concurrency = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_flush_log_at_trx_commit = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_max_dirty_pages_pct = optional(object({
+        value        = optional(string, "90")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_max_dirty_pages_pct_lwm = optional(object({
+        value        = optional(string, "10")
+        apply_method = optional(string, "immediate")
+      }))
+      join_buffer_size = optional(object({
+        value        = optional(string, 32 * 1024)
+        apply_method = optional(string, "immediate")
+      }))
+      sort_buffer_size = optional(object({
+        value        = optional(string, 32 * 1024)
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_use_native_aio = optional(object({
+        value        = optional(string, "1")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_stats_persistent = optional(object({
+        value        = optional(string, "ON")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_spin_wait_delay = optional(object({
+        value        = optional(string, "6")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_max_purge_lag_delay = optional(object({
+        value        = optional(string, "300000")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_max_purge_lag = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_checksum_algorithm = optional(object({
+        value        = optional(string, "none")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_io_capacity = optional(object({
+        value        = optional(string, "4000")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_io_capacity_max = optional(object({
+        value        = optional(string, "20000")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_lru_scan_depth = optional(object({
+        value        = optional(string, "9000")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_change_buffering = optional(object({
+        value        = optional(string, "none")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_page_cleaners = optional(object({
+        value        = optional(string, "4")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_undo_log_truncate = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_adaptive_flushing = optional(object({
+        value        = optional(string, "1")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_flush_neighbors = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "immediate")
+      }))
+      innodb_read_io_threads = optional(object({
+        value        = optional(string, "16")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_write_io_threads = optional(object({
+        value        = optional(string, "16")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_purge_threads = optional(object({
+        value        = optional(string, "4")
+        apply_method = optional(string, "pending-reboot")
+      }))
+      innodb_adaptive_hash_index = optional(object({
+        value        = optional(string, "0")
+        apply_method = optional(string, "immediate")
+      }))
+    }))
+  })
+  default = {
+    mysql = {}
+  }
+}
+
+
+## AD / IAM
+variable "db_domain" {
+  description = "The ID of the Directory Service Active Directory domain to create the instance in."
+  type        = string
+  default     = null
+}
+
+variable "db_snapshot_identifier" {
+  description = "Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console."
+  type        = string
+  default     = null
+}
+
+variable "db_domain_iam_role" {
+  description = "(Required if db_domain is provided) The name of the IAM role to be used when making API calls to the Directory Service."
+  type        = string
+  default     = null
+}
+
+variable "db_custom_iam_profile" {
+  description = "(The instance profile associated with the underlying Amazon EC2 instance of an RDS Custom DB instance."
+  type        = string
+  default     = null
+}
+
+variable "db_iam_authentication" {
+  description = "Flag that specifies whether mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled."
+  type        = bool
+  default     = false
+}
+
+
+# Replication
+variable "db_replicate_source_db" {
+  description = "Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate (if replicating within a single region) or ARN of the Amazon RDS Database to replicate (if replicating cross-region). Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id."
+  type        = string
+  default     = null
+}
+
+## Timeouts
+
+variable "db_timeouts" {
+  type = object({
+    create = optional(string, null)
+    delete = optional(string, null)
+    update = optional(string, null)
+  })
+  description = "Map of timeouts that can be adjusted when executing the module. This allows you to customize how long certain operations are allowed to take before being considered to have failed."
+  default = {
+    db_timeouts = {}
+  }
+}
+
+# Restore
+variable "db_restore_time" {
+  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
+  type        = string
+  default     = null
+}
+
+variable "db_source_dbi_resource_id" {
+  description = "The resource ID of the source DB instance from which to restore. Required if source_db_instance_identifier or source_db_instance_automated_backups_arn is not specified."
+  type        = string
+  default     = null
+}
+
+variable "db_source_db_instance_id" {
+  description = "The identifier of the source DB instance from which to restore. Must match the identifier of an existing DB instance. Required if source_db_instance_automated_backups_arn or source_dbi_resource_id is not specified."
+  type        = string
+  default     = null
+}
+
+variable "db_automated_backup_arn" {
+  description = "The ARN of the automated backup from which to restore. Required if source_db_instance_identifier or source_dbi_resource_id is not specified."
+  type        = string
+  default     = null
+}
+
+variable "db_use_latest_restore_time" {
+  description = "Flag that indicates whether the DB instance is restored from the latest backup time."
+  type        = bool
+  default     = null
+}
+
+# Backups
+variable "db_backup_retention_period" {
+  description = "The days to retain backups for. Must be between 0 and 35. Must be greater than 0 if the database is used as a source for a Read Replica."
+  type        = number
+  validation {
+    condition     = var.db_backup_retention_period >= 0 && var.db_backup_retention_period <= 35
+    error_message = "The db_backup_retention_period must be between 0 and 35."
+  }
+  default = 0
+}
+
+variable "db_backup_window" {
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Example: `09:46-10:16.` Must not overlap with maintenance_window."
+  type        = string
+  default     = null
+}
+
+variable "db_deletion_protection" {
+  description = "Flag that specifies whether the DB instance is protected from deletion."
+  type        = bool
+  default     = false
+}
+
+
+# Conditional Security Group
+
+variable "security_group_name" {
+  description = "Security group name for the RDS instance that will be created."
+  type        = string
+  default     = "mysql_rds"
 }
 
 variable "aws_security_group_name" {
@@ -39,283 +548,66 @@ variable "aws_security_group_name" {
 }
 
 variable "ingress_from_port" {
-  description = "ingress from port for rds security group"
+  description = "Starting ingress port for the RDS security group."
   type        = number
   default     = 3306
 }
 
 variable "ingress_to_port" {
-  description = "ingress from port for rds security group"
+  description = "Ending ingress port for the RDS security group."
   type        = number
   default     = 3306
 }
 
 variable "ingress_protocol" {
-  description = "ingress protocol for rds security group"
+  description = "Ingress protocol for the port defined in the RDS security group."
   type        = string
   default     = "tcp"
 }
 
 variable "ingress_cidr_blocks" {
-  description = "ingress cidr block for rds security group"
+  description = "Ingress CIDR block for the RDS security group."
   type        = list(string)
 
-  ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
+  # CIDR block for allowed incoming connection to the database. The default value is open to the world.
+  # Change it as needed before connecting to the database
   default = ["0.0.0.0/0"]
 }
 
 variable "egress_from_port" {
-  description = "egress from port for rds security group"
+  description = "Starting egress port for the RDS security group."
   type        = number
   default     = 3306
 }
 
 variable "egress_to_port" {
-  description = "egress from port for rds security group"
+  description = "Ending egress port for the RDS security group."
   type        = number
   default     = 3306
 }
 
 variable "egress_protocol" {
-  description = "egress protocol for rds security group"
+  description = "Egress protocol for the port defined in the RDS security group."
   type        = string
   default     = "tcp"
 }
 
 variable "egress_cidr_blocks" {
-  description = "egress cidr block for rds security group"
+  description = "Egress CIDR block for the RDS security group."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
 variable "rds_security_group_tag" {
-  description = "tag for rds security group"
+  description = "Map of tags for the RDS security group."
   type        = map(string)
   default = {
     "Name" = "mysql_rds"
   }
 }
 
-variable "db_parameter_group_name" {
-  description = "name for db parameter group"
-  type        = string
-  default     = "mysql"
-}
-
-variable "db_parameter_group_family" {
-  description = "family for db parameter group"
-  type        = string
-  default     = "mysql8.0"
-}
-
-variable "aws_database_instance_identifier" {
-  type    = string
-  default = "mysql"
-}
-
-variable "aws_database_allocated_storage" {
-  type        = string
-  description = "The allocated storage in gibibytes."
-  default     = 20
-}
-
-variable "aws_database_engine_version" {
-  description = "database engine version for aws database instance"
-  type        = string
-  default     = "8.0"
-}
-
-variable "aws_db_username" {
-  description = "Username for the master DB user"
-  type        = string
-  default     = "mysqladmin"
-}
-
-variable "aws_database_publicly_accessible" {
-  description = "flag to indicate whether database will be publicly accessible"
+variable "create_security_group" {
   type        = bool
+  description = "Flag that allows for the creation of a security group that allows access to the instance. Please use this for non-production use cases only."
   default     = false
-}
-
-variable "aws_database_skip_final_snapshot" {
-  description = "Flag which determines if a final DB snapshot is taken prior to instance deletion."
-  type        = bool
-  default     = false
-}
-
-variable "aws_database_final_snapshot_prefix" {
-  description = "The name which is prefixed to the final snapshot on cluster destroy"
-  type        = string
-  default     = "mysql-snap-"
-}
-
-variable "parameters" {
-  description = "A list of DB parameter maps to apply"
-  type        = list(map(string))
-  default = [
-    {
-      name  = "table_open_cache"
-      value = 8000
-    },
-    {
-      name         = "table_open_cache_instances"
-      value        = 16
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "max_connections"
-      value = 4000
-    },
-    {
-      name         = "back_log"
-      value        = 1500
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "default_password_lifetime"
-      value = 0
-    },
-    {
-      name         = "performance_schema"
-      value        = "OFF"
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "max_prepared_stmt_count"
-      value = 128000
-    },
-    {
-      name  = "character_set_server"
-      value = "latin1"
-    },
-    {
-      name  = "collation_server"
-      value = "latin1_swedish_ci"
-    },
-    {
-      name  = "transaction_isolation"
-      value = "REPEATABLE-READ"
-    },
-    {
-      name         = "innodb_log_file_size"
-      value        = 1024 * 1024 * 1024
-      apply_method = "pending-reboot"
-    },
-    {
-      name         = "innodb_open_files"
-      value        = 4000
-      apply_method = "pending-reboot"
-    },
-    {
-      name         = "innodb_buffer_pool_instances"
-      value        = 16
-      apply_method = "pending-reboot"
-    },
-    {
-      name         = "innodb_log_buffer_size"
-      value        = 67108864
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "innodb_thread_concurrency"
-      value = 0
-    },
-    {
-      name  = "innodb_flush_log_at_trx_commit"
-      value = 0
-    },
-    {
-      name  = "innodb_max_dirty_pages_pct"
-      value = 90
-    },
-    {
-      name  = "innodb_max_dirty_pages_pct_lwm"
-      value = 10
-    },
-    {
-      name  = "join_buffer_size"
-      value = 32 * 1024
-    },
-    {
-      name  = "sort_buffer_size"
-      value = 32 * 1024
-    },
-    {
-      name         = "innodb_use_native_aio"
-      value        = 1
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "innodb_stats_persistent"
-      value = 1
-    },
-    {
-      name  = "innodb_spin_wait_delay"
-      value = 6
-    },
-    {
-      name  = "innodb_max_purge_lag_delay"
-      value = 300000
-    },
-    {
-      name  = "innodb_max_purge_lag"
-      value = 0
-    },
-    {
-      name  = "innodb_checksum_algorithm"
-      value = "none"
-    },
-    {
-      name  = "innodb_io_capacity"
-      value = 4000
-    },
-    {
-      name  = "innodb_io_capacity_max"
-      value = 20000
-    },
-    {
-      name  = "innodb_lru_scan_depth"
-      value = 9000
-    },
-    {
-      name  = "innodb_change_buffering"
-      value = "none"
-    },
-    {
-      name         = "innodb_page_cleaners"
-      value        = 4
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "innodb_undo_log_truncate"
-      value = "off"
-    },
-    {
-      name  = "innodb_adaptive_flushing"
-      value = 1
-    },
-    {
-      name  = "innodb_flush_neighbors"
-      value = 0
-    },
-    {
-      name         = "innodb_read_io_threads"
-      value        = 16
-      apply_method = "pending-reboot"
-    },
-    {
-      name         = "innodb_write_io_threads"
-      value        = 16
-      apply_method = "pending-reboot"
-    },
-    {
-      name         = "innodb_purge_threads"
-      value        = 4
-      apply_method = "pending-reboot"
-    },
-    {
-      name  = "innodb_adaptive_hash_index"
-      value = 0
-    }
-  ]
 }
