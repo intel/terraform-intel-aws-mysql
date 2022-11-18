@@ -236,12 +236,14 @@ variable "db_name" {
 
 variable "db_username" {
   description = "Username for the master database user."
+  type        = string
   sensitive   = false
   default     = null
 }
 
 variable "db_password" {
   description = "Password for the master database user."
+  type        = string
   sensitive   = true
   validation {
     condition     = length(var.db_password) >= 8
@@ -534,12 +536,6 @@ variable "db_deletion_protection" {
   description = "Flag that specifies whether the DB instance is protected from deletion."
   type        = bool
   default     = false
-}
-
-variable "security_group_name" {
-  description = "Security group name for the RDS instance that will be created."
-  type        = string
-  default     = "mysql_rds"
 }
 
 variable "aws_security_group_name" {
