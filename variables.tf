@@ -381,7 +381,7 @@ variable "db_storage_type" {
 variable "db_allocated_storage" {
   description = "Allocated storage for AWS database instance."
   type        = number
-  default     = 400
+  default     = 100
 }
 
 variable "db_max_allocated_storage" {
