@@ -9,7 +9,7 @@
 
 variable "db_parameters" {
   type = object({
-    mysql = optional(object({
+    mysql = object({
       table_open_cache = optional(object({
         value        = optional(string, "8000")
         apply_method = optional(string, "immediate")
@@ -170,10 +170,51 @@ variable "db_parameters" {
         value        = optional(string, "0")
         apply_method = optional(string, "immediate")
       }))
-    }))
+    })
   })
   default = {
-    mysql = {}
+    mysql = {
+      back_log                       = {}
+      character_set_server           = {}
+      collation_server               = {}
+      default_password_lifetime      = {}
+      innodb_adaptive_flushing       = {}
+      innodb_adaptive_hash_index     = {}
+      innodb_buffer_pool_instances   = {}
+      innodb_buffer_pool_size        = {}
+      innodb_change_buffering        = {}
+      innodb_checksum_algorithm      = {}
+      innodb_file_per_table          = {}
+      innodb_flush_log_at_trx_commit = {}
+      innodb_flush_neighbors         = {}
+      innodb_io_capacity             = {}
+      innodb_io_capacity_max         = {}
+      innodb_log_buffer_size         = {}
+      innodb_log_file_size           = {}
+      innodb_lru_scan_depth          = {}
+      innodb_max_dirty_pages_pct     = {}
+      innodb_max_dirty_pages_pct_lwm = {}
+      innodb_max_purge_lag           = {}
+      innodb_max_purge_lag_delay     = {}
+      innodb_open_files              = {}
+      innodb_page_cleaners           = {}
+      innodb_purge_threads           = {}
+      innodb_read_io_threads         = {}
+      innodb_spin_wait_delay         = {}
+      innodb_stats_persistent        = {}
+      innodb_thread_concurrency      = {}
+      innodb_undo_log_truncate       = {}
+      innodb_use_native_aio          = {}
+      innodb_write_io_threads        = {}
+      join_buffer_size               = {}
+      max_connections                = {}
+      max_prepared_stmt_count        = {}
+      performance_schema             = {}
+      sort_buffer_size               = {}
+      table_open_cache               = {}
+      table_open_cache_instances     = {}
+      transaction_isolation          = {}
+    }
   }
 }
 
@@ -288,7 +329,7 @@ variable "availability_zone" {
 variable "multi_az" {
   description = "Flag that specifies if the RDS instance is multi_az."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "db_tags" {
@@ -334,25 +375,25 @@ variable "db_storage_type" {
     condition     = contains(["standard", "gp2", "io1"], var.db_storage_type)
     error_message = "The db_storage_type must be one of the following: \"standard\", \"gp2\", \"io1\"."
   }
-  default = "gp2"
+  default = "io1"
 }
 
 variable "db_allocated_storage" {
   description = "Allocated storage for AWS database instance."
   type        = number
-  default     = null
+  default     = 400
 }
 
 variable "db_max_allocated_storage" {
   description = "When configured, the upper limit to which Amazon RDS can automatically scale the storage of the DB instance. Configuring this will automatically ignore differences to allocated_storage. Must be greater than or equal to allocated_storage or 0 to disable Storage Autoscaling."
   type        = number
-  default     = null
+  default     = 10000
 }
 
 variable "db_iops" {
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of io1."
   type        = number
-  default     = 0
+  default     = 10000
 }
 
 variable "db_apply_immediately" {
