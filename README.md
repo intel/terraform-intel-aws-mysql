@@ -12,6 +12,8 @@ Configuration in this directory creates an Amazon RDS instance for MySQL. The in
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
+The MySQL Optimizations were based off [Intel Xeon Tunning guides](<https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-database-tuning-guide-on-xeon-systems.html>)
+
 ## Usage
 See examples folder for additional examples.  
 

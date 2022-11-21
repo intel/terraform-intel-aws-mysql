@@ -1,152 +1,15 @@
-# we recommend memory optimized instances - db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
-# see more: https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
-# The 6th generation of Amazon EC2 x86-based General Purpose compute instances are designed to provide a balance of compute, memory, storage, and network resources.
+########################
+####     Intel      ####
+########################
 
-variable "vpc_id" {
-  description = "id of the vpc"
-  type        = string
-}
-
-variable "db_password" {
-  description = "RDS root user password"
-  sensitive   = true
-}
-
+# We recommend  Intel Xeon 3rd Generation Scalable processors (code-named Ice Lake)
+# General Purpose: db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
+# Memory Optimized: db.r6i.large, db.r6i.xlarge, db.r6i.2xlarge, db.r6i.4xlarge, db.r6i.8xlarge, db.r6i.12xlarge, db.r6i.16xlarge, db.r6i.24xlarge, db.r6i.32xlarge
+# See more: https://aws.amazon.com/ec2/instance-types/m6i/  https://aws.amazon.com/rds/mysql/pricing/?nc=sn&loc=4
 variable "aws_database_instance_class" {
   type        = string
   description = "The instance type of the RDS instance."
   default     = "db.m6i.2xlarge"
-}
-
-variable "db_subnet_group_name" {
-  description = "Name for the database subnet group that will be created."
-  type        = string
-  default     = "mysql"
-}
-
-variable "db_subnet_group_tag" {
-  description = "tag for db subnet group"
-  type        = map(string)
-  default = {
-    "Name" = "mysql"
-  }
-}
-
-variable "aws_security_group_name" {
-  description = "security group name for the rds"
-  type        = string
-  default     = "mysql_rds"
-}
-
-variable "ingress_from_port" {
-  description = "ingress from port for rds security group"
-  type        = number
-  default     = 3306
-}
-
-variable "ingress_to_port" {
-  description = "ingress from port for rds security group"
-  type        = number
-  default     = 3306
-}
-
-variable "ingress_protocol" {
-  description = "ingress protocol for rds security group"
-  type        = string
-  default     = "tcp"
-}
-
-variable "ingress_cidr_blocks" {
-  description = "ingress cidr block for rds security group"
-  type        = list(string)
-
-  ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
-  default = ["0.0.0.0/0"]
-}
-
-variable "egress_from_port" {
-  description = "egress from port for rds security group"
-  type        = number
-  default     = 3306
-}
-
-variable "egress_to_port" {
-  description = "egress from port for rds security group"
-  type        = number
-  default     = 3306
-}
-
-variable "egress_protocol" {
-  description = "egress protocol for rds security group"
-  type        = string
-  default     = "tcp"
-}
-
-variable "egress_cidr_blocks" {
-  description = "egress cidr block for rds security group"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
-variable "rds_security_group_tag" {
-  description = "tag for rds security group"
-  type        = map(string)
-  default = {
-    "Name" = "mysql_rds"
-  }
-}
-
-variable "db_parameter_group_name" {
-  description = "name for db parameter group"
-  type        = string
-  default     = "mysql"
-}
-
-variable "db_parameter_group_family" {
-  description = "family for db parameter group"
-  type        = string
-  default     = "mysql8.0"
-}
-
-variable "aws_database_instance_identifier" {
-  type    = string
-  default = "mysql"
-}
-
-variable "aws_database_allocated_storage" {
-  type        = string
-  description = "The allocated storage in gibibytes."
-  default     = 20
-}
-
-variable "aws_database_engine_version" {
-  description = "database engine version for aws database instance"
-  type        = string
-  default     = "8.0"
-}
-
-variable "aws_db_username" {
-  description = "Username for the master DB user"
-  type        = string
-  default     = "mysqladmin"
-}
-
-variable "aws_database_publicly_accessible" {
-  description = "flag to indicate whether database will be publicly accessible"
-  type        = bool
-  default     = false
-}
-
-variable "aws_database_skip_final_snapshot" {
-  description = "Flag which determines if a final DB snapshot is taken prior to instance deletion."
-  type        = bool
-  default     = false
-}
-
-variable "aws_database_final_snapshot_prefix" {
-  description = "The name which is prefixed to the final snapshot on cluster destroy"
-  type        = string
-  default     = "mysql-snap-"
 }
 
 variable "parameters" {
@@ -318,4 +181,153 @@ variable "parameters" {
       value = 0
     }
   ]
+}
+
+########################
+####    Required    ####
+########################
+
+variable "vpc_id" {
+  description = "id of the vpc"
+  type        = string
+}
+
+variable "db_password" {
+  description = "RDS root user password"
+  sensitive   = true
+}
+
+########################
+####     Other      ####
+########################
+
+variable "db_subnet_group_name" {
+  description = "Name for the database subnet group that will be created."
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_subnet_group_tag" {
+  description = "tag for db subnet group"
+  type        = map(string)
+  default = {
+    "Name" = "mysql"
+  }
+}
+
+variable "aws_security_group_name" {
+  description = "security group name for the rds"
+  type        = string
+  default     = "mysql_rds"
+}
+
+variable "ingress_from_port" {
+  description = "ingress from port for rds security group"
+  type        = number
+  default     = 3306
+}
+
+variable "ingress_to_port" {
+  description = "ingress from port for rds security group"
+  type        = number
+  default     = 3306
+}
+
+variable "ingress_protocol" {
+  description = "ingress protocol for rds security group"
+  type        = string
+  default     = "tcp"
+}
+
+variable "ingress_cidr_blocks" {
+  description = "ingress cidr block for rds security group"
+  type        = list(string)
+
+  ## Cidr block for allowed incoming connection to the database. Change it as needed before connecting to the database
+  default = ["0.0.0.0/0"]
+}
+
+variable "egress_from_port" {
+  description = "egress from port for rds security group"
+  type        = number
+  default     = 3306
+}
+
+variable "egress_to_port" {
+  description = "egress from port for rds security group"
+  type        = number
+  default     = 3306
+}
+
+variable "egress_protocol" {
+  description = "egress protocol for rds security group"
+  type        = string
+  default     = "tcp"
+}
+
+variable "egress_cidr_blocks" {
+  description = "egress cidr block for rds security group"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "rds_security_group_tag" {
+  description = "tag for rds security group"
+  type        = map(string)
+  default = {
+    "Name" = "mysql_rds"
+  }
+}
+
+variable "db_parameter_group_name" {
+  description = "name for db parameter group"
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_parameter_group_family" {
+  description = "family for db parameter group"
+  type        = string
+  default     = "mysql8.0"
+}
+
+variable "aws_database_instance_identifier" {
+  type    = string
+  default = "mysql"
+}
+
+variable "aws_database_allocated_storage" {
+  type        = string
+  description = "The allocated storage in gibibytes."
+  default     = 20
+}
+
+variable "aws_database_engine_version" {
+  description = "database engine version for aws database instance"
+  type        = string
+  default     = "8.0"
+}
+
+variable "aws_db_username" {
+  description = "Username for the master DB user"
+  type        = string
+  default     = "mysqladmin"
+}
+
+variable "aws_database_publicly_accessible" {
+  description = "flag to indicate whether database will be publicly accessible"
+  type        = bool
+  default     = false
+}
+
+variable "aws_database_skip_final_snapshot" {
+  description = "Flag which determines if a final DB snapshot is taken prior to instance deletion."
+  type        = bool
+  default     = false
+}
+
+variable "aws_database_final_snapshot_prefix" {
+  description = "The name which is prefixed to the final snapshot on cluster destroy"
+  type        = string
+  default     = "mysql-snap-"
 }
