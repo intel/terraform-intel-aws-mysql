@@ -39,7 +39,7 @@ Run terraform
 
 ```bash
 
-export TF_VAR_db_passowrd ='<USE_A_STRONG_PASSWORD>'
+export TF_VAR_db_password ='<USE_A_STRONG_PASSWORD>'
 
 terraform init  
 terraform plan
