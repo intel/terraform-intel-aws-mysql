@@ -15,32 +15,39 @@ As you configure your application's environment, choose the configurations for y
 The MySQL Optimizations were based off [Intel Xeon Tunning guides](<https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-database-tuning-guide-on-xeon-systems.html>)
 
 ## Usage
-See examples folder for additional examples.  
 
-By default, you will only have to pass two variables
+**See examples folder for complete examples.**
 
+
+By default, you will only have to pass three variables
 ```hcl
 db_password
+rds_identifier
 vpc_id
 ```
 
-Example of main.tf
-
+variables.tf
 ```hcl
-# main.tf
-
-module "optimized-mysql-server" {
-  source      = "github.com/intel/terraform-intel-aws-mysql"
-  db_password = var.db_password 
-  vpc_id      = "ENTER_VPC_ID_HERE"
+variable "db_password" {
+  description = "Password for the master database user."
+  type        = string
+  sensitive   = true
 }
+```
 
+main.tf
+```hcl
+module "optimized-mysql-server" {
+  source         = "github.com/intel/terraform-intel-aws-mysql"
+  db_password    = var.db_password
+  rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
+  vpc_id         = "<YOUR-VPC-ID>"
+}
 ```
 
 Run terraform
 
 ```bash
-
 export TF_VAR_db_password ='<USE_A_STRONG_PASSWORD>'
 
 terraform init  
@@ -49,6 +56,7 @@ terraform apply
 ```
 
 ## Considerations
+
 - Check in the variables.tf file for the region where this database instance will be created. It is defaulted to run in us-west-1 region within AWS. If you want to run it within any other region, make changes accordingly within the Terraform code
 
 - Check the variables.tf file for incoming ports allowed to connect to the database instance. The variable name is ingress_cidr_blocks. Currently it is defaulted to be open to the world like 0.0.0.0/0. Before runing the code, configure it based on specific security policies and requirements within the environment it is being implemented
