@@ -652,3 +652,9 @@ variable "create_security_group" {
   description = "Flag that allows for the creation of a security group that allows access to the instance. Please use this for non-production use cases only."
   default     = false
 }
+
+variable "create_subnet_group" {
+  type        = bool
+  description = "Flag that allows for the creation of a subnet group that allows public access."
+  default     = false
+}
