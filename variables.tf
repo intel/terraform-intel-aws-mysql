@@ -2,7 +2,7 @@
 ####     Intel      ####
 ########################
 
-# We recommend  Intel Xeon 3rd Generation Scalable processors (code-named Ice Lake)
+# See policies.md, we recommend  Intel Xeon 3rd Generation Scalable processors (code-named Ice Lake)
 # General Purpose: db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
 # Memory Optimized: db.r6i.large, db.r6i.xlarge, db.r6i.2xlarge, db.r6i.4xlarge, db.r6i.8xlarge, db.r6i.12xlarge, db.r6i.16xlarge, db.r6i.24xlarge, db.r6i.32xlarge
 # See more: 
