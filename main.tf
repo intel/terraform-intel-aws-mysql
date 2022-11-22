@@ -24,18 +24,18 @@ resource "random_id" "rid" {
 }
 
 data "aws_subnets" "vpc_subnets" {
-   filter {
-     name   = "vpc-id"
-     values = [var.vpc_id]
-   }
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
 }
 
- resource "aws_db_subnet_group" "rds" {
-   count  = var.create_subnet_group !=false ? 1 : 0
-   name       = var.db_subnet_group_name
-   subnet_ids = data.aws_subnets.vpc_subnets.ids
-   tags       = var.db_subnet_group_tag
- }
+resource "aws_db_subnet_group" "rds" {
+  count      = var.create_subnet_group != false ? 1 : 0
+  name       = var.db_subnet_group_name
+  subnet_ids = data.aws_subnets.vpc_subnets.ids
+  tags       = var.db_subnet_group_tag
+}
 
 resource "aws_db_parameter_group" "rds" {
   name   = "${var.db_parameter_group_name}-${random_id.rid.dec}"
