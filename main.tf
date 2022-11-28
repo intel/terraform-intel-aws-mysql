@@ -38,7 +38,7 @@ resource "aws_db_subnet_group" "rds" {
 }
 
 resource "aws_db_parameter_group" "rds" {
-  name   = var.db_parameter_group_name
+  name   = "${var.db_parameter_group_name}-${random_id.rid.dec}"
   family = var.db_parameter_group_family
 
   dynamic "parameter" {

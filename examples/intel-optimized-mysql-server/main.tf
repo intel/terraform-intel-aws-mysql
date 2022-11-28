@@ -12,4 +12,3 @@ module "optimized-mysql-server" {
   # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
   vpc_id = "<YOUR-VPC-ID-HERE>"
 }
- 

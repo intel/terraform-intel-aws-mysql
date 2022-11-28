@@ -1,54 +1,62 @@
-# terraform-intel-aws-mysql
-Intel AWS MySQL Optimized Cloud Recipe
+<p align="center">
+  <img src="./images/logo-classicblue-800px.png" alt="Intel Logo" width="250"/>
+</p>
 
-# Amazon RDS MySQL (PaaS) - Intel Cloud Optimized Recipe
+# Intel® Cloud Optimization Modules for Terraform
 
-Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this recipe is to get you started with a database configured to run best on Intel architecture.
+© Copyright 2022, Intel Corporation
+
+## AWS RDS MySQL module
+
+Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
+The MySQL Optimizations were based off [Intel Xeon Tunning guides](<https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-database-tuning-guide-on-xeon-systems.html>)
+
 ## Usage
-See examples folder for code ./examples/main.tf
+
+**See examples folder for complete examples.**
+
 
 By default, you will only have to pass three variables
-
 ```hcl
-resource_group_name 
-mysql_server_name  
-mysql_administrator_login_password 
-
+db_password
+rds_identifier
+vpc_id
 ```
 
-Example of main.tf
-
+variables.tf
 ```hcl
-# main.tf
-
-# This variable is created so that you can provide the password value on the command line 
-variable "mysql_administrator_login_password" {
-  description = "The admin password"
+variable "db_password" {
+  description = "Password for the master database user."
+  type        = string
+  sensitive   = true
 }
+```
 
-# Provision Intel Optimized AWS MySQL server 
+main.tf
+```hcl
 module "optimized-mysql-server" {
-  source                             = "github.com/intel/terraform-intel-aws-mysql"
-  resource_group_name                = "<ENTER_RG_NAME_HERE>"
-  mysql_server_name                  = "<ENTER_MYSQL_SERVER_NAME_HERE>"
-  mysql_administrator_login_password = var.mysql_administrator_login_password
+  source         = "github.com/intel/terraform-intel-aws-mysql"
+  db_password    = var.db_password
+  rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
+  vpc_id         = "<YOUR-VPC-ID>"
 }
-
 ```
 
 Run terraform
 
 ```bash
-terraform init  
-terraform plan -var="mysql_administrator_login_password=<ENTER_PASSWORD_HERE>" #Enter a complex password
-terraform apply -var="mysql_administrator_login_password=<ENTER_PASSWORD_HERE>" #Enter a complex password
+export TF_VAR_db_password ='<USE_A_STRONG_PASSWORD>'
 
+terraform init  
+terraform plan
+terraform apply 
 ```
 
 ## Considerations
+
 - Check in the variables.tf file for the region where this database instance will be created. It is defaulted to run in us-west-1 region within AWS. If you want to run it within any other region, make changes accordingly within the Terraform code
 
 - Check the variables.tf file for incoming ports allowed to connect to the database instance. The variable name is ingress_cidr_blocks. Currently it is defaulted to be open to the world like 0.0.0.0/0. Before runing the code, configure it based on specific security policies and requirements within the environment it is being implemented
