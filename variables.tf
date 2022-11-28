@@ -342,7 +342,7 @@ variable "db_tags" {
 variable "security_group_ids" {
   type        = list(string)
   description = "List of existing AWS security groups that will be attached to the RDS instance."
-  default     = []
+  default     = null
 }
 
 variable "db_ca_cert_identifier" {
@@ -648,5 +648,11 @@ variable "rds_security_group_tag" {
 variable "create_security_group" {
   type        = bool
   description = "Flag that allows for the creation of a security group that allows access to the instance. Please use this for non-production use cases only."
+  default     = false
+}
+
+variable "create_subnet_group" {
+  type        = bool
+  description = "Flag that allows for the creation of a subnet group that allows public access."
   default     = false
 }
