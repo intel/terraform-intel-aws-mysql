@@ -226,11 +226,11 @@ variable "db_parameters" {
     }
   }
   description = "Intel Cloud optimizations for Xeon processors"
-}
 
 ########################
 ####    Required    ####
 ########################
+
 variable "vpc_id" {
   description = "VPC ID within which the database resource will be created."
   type        = string
@@ -245,6 +245,7 @@ variable "db_password" {
     error_message = "The db_password value must be at least 8 characters in length."
   }
 }
+
 
 ########################
 ####     Other      ####
@@ -293,6 +294,16 @@ variable "db_username" {
   type        = string
   sensitive   = false
   default     = null
+}
+
+variable "db_password" {
+  description = "Password for the master database user."
+  type        = string
+  sensitive   = true
+  validation {
+    condition     = length(var.db_password) >= 8
+    error_message = "The db_password value must be at least 8 characters in length."
+  }
 }
 
 variable "db_port" {
@@ -344,7 +355,7 @@ variable "db_tags" {
 variable "security_group_ids" {
   type        = list(string)
   description = "List of existing AWS security groups that will be attached to the RDS instance."
-  default     = []
+  default     = null
 }
 
 variable "db_ca_cert_identifier" {

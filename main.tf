@@ -31,7 +31,7 @@ data "aws_subnets" "vpc_subnets" {
 }
 
 resource "aws_db_subnet_group" "rds" {
-  count      = var.create_subnet_group != false ? 1 : 0
+  count      = var.create_subnet_group ? 1 : 0
   name       = var.db_subnet_group_name
   subnet_ids = data.aws_subnets.vpc_subnets.ids
   tags       = var.db_subnet_group_tag
@@ -62,7 +62,7 @@ resource "aws_db_instance" "rds" {
   # General
   db_name              = var.db_name
   engine               = local.replication_snapshot_bool ? null : var.db_engine
-  engine_version       = var.db_engine_version
+  engine_version       = local.replication_snapshot_bool ? null : var.db_engine_version
   username             = local.replication_snapshot_bool ? null : local.db_username
   password             = local.replication_snapshot_bool ? null : var.db_password
   parameter_group_name = aws_db_parameter_group.rds.name
@@ -73,7 +73,7 @@ resource "aws_db_instance" "rds" {
 
   # Networking
   publicly_accessible    = var.db_publicly_accessible
-  db_subnet_group_name   = var.create_subnet_group != false ? aws_db_subnet_group.rds[0].name : null
+  db_subnet_group_name   = var.create_subnet_group ? aws_db_subnet_group.rds[0].name : null
   vpc_security_group_ids = local.security_group_ids
   port                   = var.db_port
 
