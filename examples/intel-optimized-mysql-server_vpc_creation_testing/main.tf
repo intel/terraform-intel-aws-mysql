@@ -4,7 +4,7 @@
 
 # Provision Intel Optimized AWS MySQL server
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source = "github.com/intel/terraform-intel-aws-mysql"
   name = "my-vpc"
   cidr = "10.0.0.0/16"
 

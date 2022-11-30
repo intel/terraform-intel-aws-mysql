@@ -4,9 +4,9 @@
 
 # Provision Intel Optimized AWS MySQL server
 module "optimized-mysql-server" {
-  source         = "../../"
+  source         = "github.com/intel/terraform-intel-aws-mysql"
   db_password    = var.db_password
-  rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
+  rds_identifier =  "<NAME-FOR-RDS-INSTANCE>"
   db_parameters = {
     mysql = {
       innodb_open_files = {
