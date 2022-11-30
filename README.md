@@ -2,20 +2,16 @@
   <img src="./images/logo-classicblue-800px.png" alt="Intel Logo" width="250"/>
 </p>
 
-# Intel® Cloud Optimization Modules for Terraform
+# terraform-intel-aws-mysql
+Intel AWS MySQL Optimized Cloud Module
 
-© Copyright 2022, Intel Corporation
-
-## AWS RDS MySQL module
+# Amazon RDS MySQL (PaaS) - Intel Cloud Optimized Module
 
 Configuration in this directory creates an Amazon RDS instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
 The MySQL Optimizations were based off [Intel Xeon Tunning guides](<https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-database-tuning-guide-on-xeon-systems.html>)
-
-## Usage
-See examples folder for additional examples.  
 
 By default, you will only have to pass two variables
 
@@ -29,9 +25,22 @@ Example of main.tf
 ```hcl
 # main.tf
 
-module "optimized-mysql-server" {
+# This variable is created so that you can provide the password value on the command line 
+variable "mysql_administrator_login_password" {
+  description = "The admin password"
+}
+
+# Example of how to pass variable for database password:
+# terraform apply -var="db_password=..."
+# Environment variables can also be used https://www.terraform.io/language/values/variables#environment-variables
+
+# Provision Intel Optimized AWS MySQL server
+  module "optimized-mysql-server" {
   source      = "github.com/intel/terraform-intel-aws-mysql"
-  db_password = var.db_password 
+  db_password = var.db_password
+  # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
+  # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
+  # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
   vpc_id      = "ENTER_VPC_ID_HERE"
 }
 
