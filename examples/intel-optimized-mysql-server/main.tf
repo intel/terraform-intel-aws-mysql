@@ -4,7 +4,7 @@
 
 # Provision Intel Optimized AWS MySQL server
 module "optimized-mysql-server" {
-  source         = "../../"
+  source         = "terraform-aws-modules/vpc/aws"
   db_password    = var.db_password
   rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
   # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
