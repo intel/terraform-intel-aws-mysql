@@ -5,9 +5,9 @@
 # See policies.md, we recommend  Intel Xeon 3rd Generation Scalable processors (code-named Ice Lake)
 # General Purpose: db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
 # Memory Optimized: db.r6i.large, db.r6i.xlarge, db.r6i.2xlarge, db.r6i.4xlarge, db.r6i.8xlarge, db.r6i.12xlarge, db.r6i.16xlarge, db.r6i.24xlarge, db.r6i.32xlarge
-# See more: 
-# https://aws.amazon.com/ec2/instance-types/m6i/ 
-# https://aws.amazon.com/ec2/instance-types/r6i/    
+# See more:
+# https://aws.amazon.com/ec2/instance-types/m6i/
+# https://aws.amazon.com/ec2/instance-types/r6i/
 # https://aws.amazon.com/rds/mysql/pricing/
 
 variable "instance_class" {
@@ -226,6 +226,7 @@ variable "db_parameters" {
     }
   }
   description = "Intel Cloud optimizations for Xeon processors"
+}
 
 ########################
 ####    Required    ####
@@ -294,16 +295,6 @@ variable "db_username" {
   type        = string
   sensitive   = false
   default     = null
-}
-
-variable "db_password" {
-  description = "Password for the master database user."
-  type        = string
-  sensitive   = true
-  validation {
-    condition     = length(var.db_password) >= 8
-    error_message = "The db_password value must be at least 8 characters in length."
-  }
 }
 
 variable "db_port" {
