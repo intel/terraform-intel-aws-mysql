@@ -21,7 +21,7 @@ module "vpc" {
 }
 
 module "optimized-mysql-server" {
-  source         = "../../"
+  source         = "github.com/intel/terraform-intel-aws-mysql"
   rds_identifier = "mysql-dev"
   db_password    = var.db_password
   # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
