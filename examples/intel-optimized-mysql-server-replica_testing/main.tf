@@ -1,23 +1,27 @@
-# Example of how to pass variable for database password:
-# terraform apply -var="db_password=..."
 # Environment variables can also be used https://www.terraform.io/language/values/variables#environment-variables
 
-# Provision Intel Optimized AWS MySQL server
-module "rds_example_replica-mysql" {
-  source  = "terraform-aws-modules/rds/aws//examples/replica-mysql"
-  version = "5.1.1"
-
-  #master_db_instance_address 
-
-
-}
+# Provision Intel Optimized AWS MySQL server in default vpc of the selected AWS region and create a read replica in a different 
+# availability zone than the primary database server
 
 module "optimized-mysql-server" {
-  source      = "../../"
-  db_password = var.db_password
-  rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
-  # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
+  source         = "../../"
+  rds_identifier = "mysql-dev"
+  db_password    = var.db_password
+
+  # Update the vpc_id below for the VPC that this module will use. Find the default vpc-id in your AWS account
   # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
   # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
-  vpc_id = "<YOUR-VPC-ID-HERE>"
+  vpc_id = "vpc-5ea60f23"
+}
+
+module "optimized-mysql-server-read-replica" {
+  source         = "../../"
+  rds_identifier = "mysql-dev-replica"
+  db_password    = var.db_password
+
+  # Update the vpc-id below. Use the same vpc-id as the one used in the prior module.
+  vpc_id                           = "vpc-5ea60f23"
+  aws_database_instance_identifier = "mysql-rr"
+  db_replicate_source_db           = module.optimized-mysql-server.db_instance_id
+  kms_key_id                       = module.optimized-mysql-server.db_kms_key_id
 }
