@@ -4,9 +4,10 @@
 
 # Provision Intel Optimized AWS MySQL server
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name   = "my-vpc"
-  cidr   = "10.0.0.0/16"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.18.1"
+  name    = "my-vpc"
+  cidr    = "10.0.0.0/16"
 
 
 
@@ -15,25 +16,22 @@ module "vpc" {
 
 
   tags = {
-    Owner    = "Intel.Cloud.Optimization.Modules@inte.com"
+    Owner    = "Intel.Cloud.Optimization.Modules@intel.com"
     Duration = "4"
   }
 }
 
 module "optimized-mysql-server" {
-  source         = "intel/aws-mysql/intel"
-  rds_identifier = "mysql-dev"
-  db_password    = var.db_password
-  # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
-  # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
-  # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
-  #vpc_id = module.vpc.vpc_id
-  multi_az = false 
+  source               = "intel/aws-mysql/intel"
+  version              = "~> 1.0.2"
+  rds_identifier       = "mysql-dev"
+  db_password          = var.db_password
+  multi_az             = false
   vpc_id               = module.vpc.vpc_id
-  create_subnet_group = true
-  db_subnet_group_name = "subnet-group-test-09"
+  create_subnet_group  = false
+  db_subnet_group_name = "intel-2-test-db-subnet-group"
   db_tags = {
-    Owner    = "Intel.Cloud.Optimization.Modules@inte.com"
+    Owner    = "Intel.Cloud.Optimization.Modules@intel.com"
     Duration = "4"
   }
   ingress_cidr_blocks = ["10.10.1.0/24"]
