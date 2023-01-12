@@ -9,6 +9,9 @@ locals {
   # If skip_final_snapshot is set to false then assemble a string with the prefix-rds_identifier-random_id. dec is used because b64 and id can contain characters that rds does not allow
   snapshot_identifier = var.skip_final_snapshot == false ? "${var.final_snapshot_prefix}${var.rds_identifier}-${random_id.rid.dec}" : ""
 
+  # Determine if var.create_subnet_group is true. If it is then use aws_db_subnet_group.rds[0].name. If it is false then use the provided var.subnet_group_name or create random default one if var.subnet_group_name = null
+  db_subnet_group_name = var.create_subnet_group ? aws_db_subnet_group.rds[0].name : (var.db_subnet_group_name != null ? var.db_subnet_group_name : null)   
+ 
   # Determine if the db_username is set. If it is then we will use the value. If not we lookup the db_engine and supply a default for postgres. If the engine is mysql we use a different user for that if it is not equal to any then we pass a null value and error
   db_username = var.db_username != null ? var.db_username : (var.db_engine == "postgres" ? "pgadmin" : (var.db_engine == "mysql" ? "mysqladmin" : null))
 
@@ -73,7 +76,7 @@ resource "aws_db_instance" "rds" {
 
   # Networking
   publicly_accessible    = var.db_publicly_accessible
-  db_subnet_group_name   = var.create_subnet_group ? aws_db_subnet_group.rds[0].name : null
+  db_subnet_group_name   = local.db_subnet_group_name
   vpc_security_group_ids = local.security_group_ids
   port                   = var.db_port
 

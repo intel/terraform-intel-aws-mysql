@@ -255,7 +255,7 @@ variable "db_password" {
 variable "db_subnet_group_name" {
   description = "Database subnet group name."
   type        = string
-  default     = "mysql"
+  default     = null
 }
 
 variable "db_subnet_group_tag" {
@@ -658,5 +658,5 @@ variable "create_security_group" {
 variable "create_subnet_group" {
   type        = bool
   description = "Flag that allows for the creation of a subnet group that allows public access."
-  default     = false
+  default     = true
 }
