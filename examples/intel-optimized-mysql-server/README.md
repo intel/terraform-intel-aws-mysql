@@ -6,7 +6,7 @@
 
 © Copyright 2022, Intel Corporation
 
-## AWS RDS MySQL module - Intel Optimized Example
+## AWS RDS MySQL Module - Intel Optimized Example
 
 Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL. The instance is created on an Intel Icelake instance M6i.xlarge by default. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
@@ -35,7 +35,7 @@ variable "db_password" {
 main.tf
 ```hcl
 module "optimized-mysql-server" {
-  source         = "github.com/intel/terraform-intel-aws-mysql"
+  source         = "intel/terraform-intel-aws-mysql"
   db_password    = var.db_password
   rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
   # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account

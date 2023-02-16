@@ -15,7 +15,7 @@ module "optimized-mysql-server" {
 }
 
 module "optimized-mysql-server-read-replica" {
-  source         = "github.com/intel/terraform-intel-aws-mysql"
+  source         = "intel/terraform-intel-aws-mysql"
   rds_identifier = "mysql-dev-replica"
   db_password    = var.db_password
 
