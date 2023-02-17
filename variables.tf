@@ -247,6 +247,10 @@ variable "db_password" {
   }
 }
 
+variable "rds_identifier" {
+  description = "Name of the RDS instance that will be created."
+  type        = string
+}
 
 ########################
 ####     Other      ####
@@ -276,12 +280,6 @@ variable "db_parameter_group_family" {
   description = "Family identifier for the RDS database parameter group."
   type        = string
   default     = "mysql8.0"
-}
-
-variable "aws_database_instance_identifier" {
-  description = "Identifier for the AWS database instance."
-  type        = string
-  default     = "mysql"
 }
 
 variable "db_name" {
@@ -366,11 +364,6 @@ variable "final_snapshot_prefix" {
   description = "The name which is prefixed to the final snapshot on database termination."
   type        = string
   default     = "mysql-snap-"
-}
-
-variable "rds_identifier" {
-  description = "Name of the RDS instance that will be created."
-  type        = string
 }
 
 variable "db_storage_type" {
