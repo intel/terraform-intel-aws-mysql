@@ -4,7 +4,7 @@
 # availability zone than the primary database server
 
 module "optimized-mysql-server" {
-  source         = "github.com/intel/terraform-intel-aws-mysql"
+  source         = "intel/aws-mysql/intel"
   rds_identifier = "mysql-dev"
   db_password    = var.db_password
 
@@ -15,7 +15,7 @@ module "optimized-mysql-server" {
 }
 
 module "optimized-mysql-server-read-replica" {
-  source         = "intel/terraform-intel-aws-mysql"
+  source         = "intel/aws-mysql/intel"
   rds_identifier = "mysql-dev-replica"
   db_password    = var.db_password
 
