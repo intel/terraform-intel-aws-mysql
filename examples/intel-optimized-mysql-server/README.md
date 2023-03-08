@@ -35,7 +35,7 @@ variable "db_password" {
 main.tf
 ```hcl
 module "optimized-mysql-server" {
-  source         = "intel/terraform-intel-aws-mysql"
+  source         = "intel/aws-mysql/intel"
   db_password    = var.db_password
   rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
   # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
