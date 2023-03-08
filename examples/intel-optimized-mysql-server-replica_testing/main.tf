@@ -4,24 +4,25 @@
 # availability zone than the primary database server
 
 module "optimized-mysql-server" {
-  source         = "intel/aws-mysql/intel"
-  rds_identifier = "mysql-dev"
+  #source         = "intel/aws-mysql/intel"
+  source = "../.."
+  rds_identifier = "mysqldev"
   db_password    = var.db_password
 
   # Update the vpc_id below for the VPC that this module will use. Find the default vpc-id in your AWS account
   # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
   # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
-  vpc_id = "<ENTER VPC_ID HERE>"
+  vpc_id = "vpc-0abf36f0171c55ae1"
 }
 
 module "optimized-mysql-server-read-replica" {
-  source         = "intel/aws-mysql/intel"
-  rds_identifier = "mysql-dev-replica"
+  #source         = "intel/aws-mysql/intel"
+  source = "../.."
+  rds_identifier = "mysqldevreplica"
   db_password    = var.db_password
 
   # Update the vpc-id below. Use the same vpc-id as the one used in the prior module.
-  vpc_id                           = "<ENTER VPC_ID HERE>"
-  aws_database_instance_identifier = "mysql-rr"
+  vpc_id                           = "vpc-0abf36f0171c55ae1"
   db_replicate_source_db           = module.optimized-mysql-server.db_instance_id
   kms_key_id                       = module.optimized-mysql-server.db_kms_key_id
 }
