@@ -4,8 +4,7 @@
 # availability zone than the primary database server
 
 module "optimized-mysql-server" {
-  #source         = "intel/aws-mysql/intel"
-  source = "../.."
+  source         = "intel/aws-mysql/intel"
   rds_identifier = "mysqldev"
   db_password    = var.db_password
 
@@ -16,8 +15,7 @@ module "optimized-mysql-server" {
 }
 
 module "optimized-mysql-server-read-replica" {
-  #source         = "intel/aws-mysql/intel"
-  source = "../.."
+  source         = "intel/aws-mysql/intel"
   rds_identifier = "mysqldevreplica"
   db_password    = var.db_password
 
