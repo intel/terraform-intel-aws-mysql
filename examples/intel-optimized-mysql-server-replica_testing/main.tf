@@ -5,7 +5,7 @@
 
 module "optimized-mysql-server" {
   source         = "intel/aws-mysql/intel"
-  rds_identifier = "mysql-dev"
+  rds_identifier = "mysqldev"
   db_password    = var.db_password
 
   # Update the vpc_id below for the VPC that this module will use. Find the default vpc-id in your AWS account
@@ -16,12 +16,11 @@ module "optimized-mysql-server" {
 
 module "optimized-mysql-server-read-replica" {
   source         = "intel/aws-mysql/intel"
-  rds_identifier = "mysql-dev-replica"
+  rds_identifier = "mysqldevreplica"
   db_password    = var.db_password
 
   # Update the vpc-id below. Use the same vpc-id as the one used in the prior module.
   vpc_id                           = "<ENTER VPC_ID HERE>"
-  aws_database_instance_identifier = "mysql-rr"
   db_replicate_source_db           = module.optimized-mysql-server.db_instance_id
   kms_key_id                       = module.optimized-mysql-server.db_kms_key_id
 }
