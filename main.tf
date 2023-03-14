@@ -106,7 +106,7 @@ resource "aws_db_instance" "rds" {
   snapshot_identifier       = var.db_snapshot_identifier
   deletion_protection       = var.db_deletion_protection
   skip_final_snapshot       = var.skip_final_snapshot
-  final_snapshot_identifier = local.snapshot_identifier
+  final_snapshot_identifier = local.replication_snapshot_bool ? null : local.snapshot_identifier
 
   # Monitoring
   monitoring_interval                   = var.db_monitoring_interval
