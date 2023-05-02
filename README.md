@@ -32,7 +32,7 @@ The MySQL Optimizations were based off [Intel Xeon Tuning Guide](<https://www.in
 
 <p align="center">
   <a href="https://www.intel.com/content/www/us/en/content-details/752377/select-aws-ec2-m6i-instances-and-support-up-to-1-38x-the-ecommerce-transactions-for-mysql-databases-vs-aws-ec2-m5-instances.html">
-  <img src="[_LINK_](https://github.com/intel/terraform-intel-aws-mysql/blob/main/images/aws-mysql-2.png?raw=true)" alt="Link" width="600"/>
+  <img src="https://github.com/intel/terraform-intel-aws-mysql/blob/main/images/aws-mysql-2.png?raw=true" alt="Link" width="600"/>
   </a>
 </p>
 
