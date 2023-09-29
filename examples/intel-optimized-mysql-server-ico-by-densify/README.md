@@ -8,10 +8,13 @@
 
 ## AWS RDS MySQL Module - Intel Optimized Example using Intel Cloud Optimizer (ICO) by Densify
 
-Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer by Densify. Using this example requires a densify_recommndations.auto.tfvars file. You are expected to generate this file so this is a sample file only. In this sample file we will be using DB Idengifier = mobile-app-user2 with the example recommended instance type of db.m6i.xlarge. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
+<p align="center">
+  <img src="https://github.com/intel/terraform-intel-aws-mysql/blob/main/images/aws-mysql-ico.png?raw=true" alt="Intel + Densify Logo" width="250"/>
+</p>
 
-For further informaiotn on Intel Cloud Optimizer by Densify see: https://www.densify.com/product/intel/
+Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer by Densify. Intel® Cloud Optimizer is a collaboration between Densify and Intel targeted at getting you the most from your cloud investment. Intel Cloud Optimizer by Densify helps customers optimize their cloud investments and ensure optimal performance for every workload. Using this example requires a densify_recommndations.auto.tfvars file. You are expected to generate this file so this is a sample file only. In this sample file we will be using DB Idengifier = mobile-app-user2 with the example recommended instance type of db.m6i.xlarge. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
+For further informaiotn on Intel Cloud Optimizer by Densify see [Intel Cloud Optimizer by Densify](<https://www.densify.com/product/intel/>)
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
