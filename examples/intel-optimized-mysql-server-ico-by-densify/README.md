@@ -8,7 +8,10 @@
 
 ## AWS RDS MySQL Module - Intel Optimized Example using Intel Cloud Optimizer (ICO) by Densify
 
-Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer. Using this example requires a densify_recommndations.auto.tfvars file. You are expected to generate this file so this is a sample file only. In this sample file we will be using DB Idengifier = mobile-app-user2 with the example recommended instance type of db.m6i.xlarge. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
+Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer by Densify. Using this example requires a densify_recommndations.auto.tfvars file. You are expected to generate this file so this is a sample file only. In this sample file we will be using DB Idengifier = mobile-app-user2 with the example recommended instance type of db.m6i.xlarge. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
+
+For further informaiotn on Intel Cloud Optimizer by Densify see: https://www.densify.com/product/intel/
+
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
