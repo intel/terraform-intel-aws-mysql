@@ -12,9 +12,23 @@
   <img src="https://github.com/intel/terraform-intel-aws-mysql/blob/main/images/aws-mysql-ico.png?raw=true" alt="Intel + Densify Logo" width="250"/>
 </p>
 
-Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer by Densify. Intel® Cloud Optimizer is a collaboration between Densify and Intel targeted at getting you the most from your cloud investment. Intel Cloud Optimizer by Densify helps customers optimize their cloud investments and ensure optimal performance for every workload. Using this example requires a densify_recommndations.auto.tfvars file. You are expected to generate this file so this is a sample file only. In this sample file we will be using DB Identifier = mobile-app-user2 with the example recommended instance type of db.m6i.xlarge. The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. The goal of this module is to get you started with a database configured to run best on Intel architecture.
+Configuration in this directory creates an Amazon RDS Intel optimized instance for MySQL using recommended instance from Intel Cloud Optimizer by Densify.
 
-For further informaiotn on Intel Cloud Optimizer by Densify see [Intel Cloud Optimizer by Densify](<https://www.densify.com/product/intel/>)
+Intel® Cloud Optimizer is a collaboration between Densify and Intel targeted at getting you the most from your cloud investment. 
+
+Intel Cloud Optimizer by Densify helps customers optimize their cloud investments and ensure optimal performance for every workload.
+
+Intel Cloud Optimizer by Densify is a commercial product. With Intel® Cloud Optimizer, Intel funds the use of Densify for qualifying enterprises for 12 months. For full details of the Intel Cloud Optimizer by Densify offer please see: [INTEL CLOUD OPTIMIZER by DENSIFY](https://www.densify.com/product/intel/)
+
+Using this example requires a "densify_recommndations.auto.tfvars" file. You are expected to generate this file so this is a sample file only. 
+
+You are expected to generate this file so this is a sample file only. 
+
+In this sample file we will be using "DB Identifier = mobile-app-user2" with the example recommended instance type of db.m6i.xlarge. 
+
+The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. 
+
+The goal of this module is to get you started with a database configured to run best on Intel architecture.
 
 As you configure your application's environment, choose the configurations for your infrastructure that matches your application's requirements.
 
@@ -38,16 +52,26 @@ variable "db_password" {
 }
 ```
 
-main.tf
-```hcl
+module "densify" {
+  source  = "densify-dev/optimization-as-code/null"
+  densify_recommendations = var.densify_recommendations
+  densify_fallback        = var.densify_fallback
+  densify_unique_id       = var.name
+}
+
+
 module "optimized-mysql-server" {
   source         = "intel/aws-mysql/intel"
   db_password    = var.db_password
-  rds_identifier = "<NAME-FOR-RDS-INSTANCE>"
-  # Update the vpc_id below for the VPC that this module will use. Find the vpc-id in your AWS account
-  # from the AWS console or using CLI commands. In your AWS account, the vpc-id is represented as "vpc-",
-  # followed by a set of alphanumeric characters. One sample representation of a vpc-id is vpc-0a6734z932p20c2m4
+  rds_identifier = var.name
+  #instance_class = "db.m5.2xlarge"
+  instance_class = module.densify.recommended_type
   vpc_id = "<YOUR-VPC-ID-HERE>"
+  db_tags = {
+    "App" = "Intel Optimized Database"
+    "Owner" = "Intel.Cloud.Optimization.Modules@intel.com"
+    "Duration" = "8"
+  }
 }
 
 ```
