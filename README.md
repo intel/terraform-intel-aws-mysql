@@ -2,9 +2,9 @@
   <img src="https://github.com/intel/terraform-intel-aws-mysql/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
 </p>
 
-# Intel® Cloud Optimization Modules for Terraform
+# Intel® Optimized Cloud Modules for Terraform
 
-© Copyright 2022, Intel Corporation
+© Copyright 2024, Intel Corporation
 
 ## AWS RDS MySQL module
 
@@ -117,14 +117,14 @@ terraform apply
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.36 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.31 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~>3.4.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 4.36 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.31 |
 | <a name="provider_random"></a> [random](#provider\_random) | ~>3.4.3 |
 
 ## Modules
