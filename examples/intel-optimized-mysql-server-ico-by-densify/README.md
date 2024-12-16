@@ -24,7 +24,7 @@ Using this example requires a "densify_recommndations.auto.tfvars" file. You are
 
 You are expected to generate this file so this is a sample file only. 
 
-In this sample file we will be using "DB Identifier = mobile-app-user2" with the example recommended instance type of db.m6i.xlarge. 
+In this sample file we will be using "DB Identifier = mobile-app-user2" with the example recommended instance type of db.m7i.2xlarge. 
 
 The instance is pre-configured with parameters within the database parameter group that is optimized for Intel architecture. 
 
