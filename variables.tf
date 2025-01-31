@@ -3,17 +3,17 @@
 ########################
 
 # See policies.md, we recommend  Intel Xeon 3rd Generation Scalable processors (code-named Ice Lake)
-# General Purpose: db.m6i.large, db.m6i.xlarge, db.m6i.2xlarge, db.m6i.4xlarge, db.m6i.8xlarge, db.m6i.12xlarge, db.m6i.16xlarge, db.m6i.24xlarge, db.m6i.32xlarge
-# Memory Optimized: db.r6i.large, db.r6i.xlarge, db.r6i.2xlarge, db.r6i.4xlarge, db.r6i.8xlarge, db.r6i.12xlarge, db.r6i.16xlarge, db.r6i.24xlarge, db.r6i.32xlarge
+# General Purpose: db.m7i.large, db.m7i.xlarge, db.m7i.2xlarge, db.m7i.4xlarge, db.m7i.8xlarge, db.m7i.12xlarge, db.m7i.16xlarge, db.m7i.24xlarge, db.m7i.32xlarge
+# Memory Optimized: db.r7i.large, db.r7i.xlarge, db.r7i.2xlarge, db.r7i.4xlarge, db.r7i.8xlarge, db.r7i.12xlarge, db.r7i.16xlarge, db.r7i.24xlarge, db.r7i.32xlarge
 # See more:
-# https://aws.amazon.com/ec2/instance-types/m6i/
-# https://aws.amazon.com/ec2/instance-types/r6i/
+# https://aws.amazon.com/ec2/instance-types/m7i/
+# https://aws.amazon.com/ec2/instance-types/r7i/
 # https://aws.amazon.com/rds/mysql/pricing/
 
 variable "instance_class" {
   type        = string
   description = "Instance class that will be used by the RDS instance."
-  default     = "db.m6i.2xlarge"
+  default     = "db.m7i.2xlarge"
 }
 
 variable "db_parameters" {
