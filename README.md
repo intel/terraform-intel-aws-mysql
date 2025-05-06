@@ -4,7 +4,7 @@
 
 # Intel® Optimized Cloud Modules for Terraform
 
-© Copyright 2024, Intel Corporation
+© Copyright 2025, Intel Corporation
 
 ## AWS RDS MySQL module
 
@@ -131,6 +131,14 @@ No modules.
 | [aws_security_group.rds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [random_id.rid](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [aws_subnets.vpc_subnets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+
+## Links
+
+<https://aws.amazon.com/ec2/instance-types/m6i/>
+
+<https://aws.amazon.com/ec2/instance-types/r6i/>
+
+<https://aws.amazon.com/rds/mysql/pricing/>
 
 ## Inputs
 
